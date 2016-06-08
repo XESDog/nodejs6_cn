@@ -97,6 +97,67 @@ http.request(options, onResponseCallback);
 
 默认情况下,该方法和`net.createConnection()`是一样的,通常考虑灵活性一般会使用Agent来重写该方法。
 
+一个socket/stream可以通过两种方法获得:通过该方法返回,或传递socket/stream给`callback`。
+
+`callback`签名:`(err,stream)`。
+
+### agent.destroy()
+
+通过agent销毁当前正使用的socket。
+
+通常不必这么做,如果你正在使用agent且KeepAlive=true,当你知道agent不再被使用时,你最好明确的关闭它。否则,服务器结束它们之前,socket将会挂起很长一段时间。
+
+### agent.freeSockets
+
+当HTTPKeepAlive被使用,一个包含socket数组的对象正等在Agent使用。不可修改。
+
+### agent.getName(options)
+
+获取一组`options`表示的唯一name,来决定是否连接被重用。在http agent中,返回`host:post:localAddress`。
+在http agent中, CA,cert,ciphers,以及其他HTTPS/TLS-specific选项决定socket的可重用性。
+
+Options:
+- `host`: 请求到某服务器的域名和IP地址
+- `port`: 远程服务器的端口号
+- `localAddress`: 当请求发送的时候,绑定到网络连接的本地接口
+
+### agent.maxFreeSockets
+
+默认设置为256,Agent支持HTTPKeepAlive时,将该值设置为自由状态下能够打开的最大值。
+
+### agent.maxSockets
+
+默认情况下为无限。能同时开多少socket取决于服务器。
+
+### agent.requests
+
+一个还未被分配到socket的请求队列,不可修改。
+
+### agent.sockets
+一个当前被agent使用的socket数组,不可修改。
+
+## http.ClientRequest 类
+
+该对象通过`http.request()`内部创建并返回。它表示一个header已经进入队列了的正在进行的请求。
+这个header依然可以通过 `setHeader(name,value)`,`getHeader(name)`,`removeHeader(name)`来做修改。
+真是的header将沿着第一个数据块,或者链接关闭的时候发送。
+
+要想获取response,添加request对象的`response`侦听事件。`response`事件将在response头信息被收到的时候通过request对象发送。
+`response`事件被执行的``时候带一个`http.IncomingMessage`类型的参数。
+
+在`response`事件期间,你可以为response对象添加侦听事件,特别是`data`事件。
+
+
+如果你侦听了`response`事件,你必须将response对象的数据完全取出。你可以通过 `response.read()`当触发`readable`事件的时候。
+你还可以添加 `data`处理函数,也可以执行`.resume()`方法。知道所有数据都被取出,执行`end`事件。如果有数据没有读取完,将导致内存出错。
+
+注意:Node.js不会去检测是否Content-Length以及被发送的body的长度是否相等。
+
+###Event:'abort'
+
+
+
+
 
 
 
