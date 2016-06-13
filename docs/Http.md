@@ -154,6 +154,290 @@ Options:
 注意:Node.js不会去检测是否Content-Length以及被发送的body的长度是否相等。
 
 ###Event:'abort'
+`function (){}`
+当请求被客户端忽略的时候发送。该事件仅仅在第一次call abort()的时候发送。
+
+###Event:'checkExpectation'
+`function (request,response){}`
+每次发送一个请求,都有一个Expect头被收到。如果该事件未被侦听,服务端将自动回复一个417 Expectation Failed。
+
+注意,当这个事件被发送并被处理,`request`事件将不会发送。
+
+###Event:'connect'
+`function (response,socket,head){}`
+每次服务端回复一个请求的时候都会发送一个`CONNECT`事件。如果这个事件没有被侦听,客户接收`CONNECT`事件时,他们的连接就已经关闭了。
+
+以下例子告诉你如何侦听`connenct`事件。
+
+```
+const http = require('http');
+const net = require('net');
+const url = require('url');
+
+// Create an HTTP tunneling proxy
+var proxy = http.createServer( (req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('okay');
+});
+proxy.on('connect', (req, cltSocket, head) => {
+  // connect to an origin server
+  var srvUrl = url.parse(`http://${req.url}`);
+  var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
+    cltSocket.write('HTTP/1.1 200 Connection Established\r\n' +
+                    'Proxy-agent: Node.js-Proxy\r\n' +
+                    '\r\n');
+    srvSocket.write(head);
+    srvSocket.pipe(cltSocket);
+    cltSocket.pipe(srvSocket);
+  });
+});
+
+// now that proxy is running
+proxy.listen(1337, '127.0.0.1', () => {
+
+  // make a request to a tunneling proxy
+  var options = {
+    port: 1337,
+    hostname: '127.0.0.1',
+    method: 'CONNECT',
+    path: 'www.google.com:80'
+  };
+
+  var req = http.request(options);
+  req.end();
+
+  req.on('connect', (res, socket, head) => {
+    console.log('got connected!');
+
+    // make a request over an HTTP tunnel
+    socket.write('GET / HTTP/1.1\r\n' +
+                 'Host: www.google.com:80\r\n' +
+                 'Connection: close\r\n' +
+                 '\r\n');
+    socket.on('data', (chunk) => {
+      console.log(chunk.toString());
+    });
+    socket.on('end', () => {
+      proxy.close();
+    });
+  });
+});
+
+```
+
+### Event:'continue'
+`function(){}`
+当服务端发送了一个'100 continue'Http回复的时候触发该事件,通常是因为request包含'Expect:100-continue'。这是一条客户端request body中的指令。
+
+### Event:'response'
+`function (response){}`
+当回复被request收到的时候触发。该事件仅触发一次。`response`参数是一个`http.IncomingMessage`对象。
+
+### Event:'socket'
+`function (socket){}`
+一个socket分配给request之后触发。
+
+###Event:'upgrade'
+`function (response,socket,head){}`
+服务端有更新回复request的时候触发。如果该事件未被侦听,客户端收到更新事件头信息的时候连接就关闭了。
+
+下面代码展示如何侦听`upgrade`事件
+
+```
+const http = require('http');
+
+// Create an HTTP server
+var srv = http.createServer( (req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('okay');
+});
+srv.on('upgrade', (req, socket, head) => {
+  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+               'Upgrade: WebSocket\r\n' +
+               'Connection: Upgrade\r\n' +
+               '\r\n');
+
+  socket.pipe(socket); // echo back
+});
+
+// now that server is running
+srv.listen(1337, '127.0.0.1', () => {
+
+  // make a request
+  var options = {
+    port: 1337,
+    hostname: '127.0.0.1',
+    headers: {
+      'Connection': 'Upgrade',
+      'Upgrade': 'websocket'
+    }
+  };
+
+  var req = http.request(options);
+  req.end();
+
+  req.on('upgrade', (res, socket, upgradeHead) => {
+    console.log('got upgraded!');
+    socket.end();
+    process.exit(0);
+  });
+});
+
+```
+
+###request.abort()
+标记request终止中。执行该方法将导致response中剩下的数据被丢弃,并且,socket被销毁。
+
+###request.end(\[data\]\[,encoding\]\[,callback\])
+结束正在发送的请求,还有任何部分的数据没有发送,都将缓冲到stream中。如果request被分割成块了,将发送`0\r\n\r\n`来表示终结。
+
+如果`data`被指定,则相当于调用`response.write(data,encoding)`,再执行`request.end(callback)`。
+
+如果`callback`被指定,当request流被结束之后执行。
+
+###request.flushHeaders()
+flush request头信息
+考虑到效率问题,Node.js通常缓存request头信息,知道`request.end()`,或者写入第一块请求数据。它试图打包request头信息和数据到一个独立的TCP包中。
+
+通常你希望能够将数据保持在一个TCP请求的来回期间,可是一般在晚一些的时间,第一次数据才会被发送到。`request.flushHeaders()`让你避开了优化启动请求。
+
+###request.setNoDelay(\[noDelay\])
+当一个socket被分配到某个request并断开的时候,将执行`socket.setNoDelay()`。
+
+###request.setSocketKeepALive(\[enable\]\[,initialDelay\])
+当一个socket被分配到某个request并断开的时候,将执行`socket.setKeepAlive()`。
+
+###request.setTimeout(timeout\[,callback\])
+当一个socket被分配到某个request并断开的时候,将执行`socket.setTimeout()`。
+- `timeout`\<Number\> 一个请求被超时xxx毫秒。
+- `callback`\<Function\> 当超时指定的时间到了之后执行的方法。相当于绑定`timeout`事件。
+
+###request.write(chunk\[,encoding\]\[,callback\])
+发送数据,调用这个方法的时候,用户能够直接控制请求中的数据。也就是说,当创建这种请求的时候,用户可能正在使用`[Transter-Encoding,'chunked']`头信息。
+
+`chunk`参数必须是`Buffer`对象或者一个string。
+
+`encoding`参数仅当`chunk`是string的情况下可选,默认为`utf8`。
+
+`callback`参数可选,当大块数据被flush的时候调用。
+
+返回`reqeust`。
+
+##http.Server类
+
+继承至`net.Server`类,并且增加额外的事件:
+
+
+###Event:'checkContinue'
+`function(request,response){}`
+Expect:100-continue 被接收到的时候发送一个请求。如果没有侦听该事件,服务端将酌情自动回复100 Continue。
+
+如果客户端继续发送request body部分,那么处理事件的同时调用`response.writeContinue()`。如果客户端不继续发送request body部分,那么生成一个恰当的HTTP恢复(e.g.,400 Bad Request)
+
+注意:当该事件被触发并处理,`request`事件将不被触发。
+
+###Event:'clientError'
+`function(exception,socket){}`
+
+如果客户端触发`error`事件,它将在这里被转发。侦听器负责关闭或销毁底层socket。比如,你希望通过更加优雅的方式关闭socket,给用户返回一个`400 Bad Request`,而不是突然关闭。
+
+默认,当遇到异常请求会立即销毁socket。
+
+错误来源于`socket`,是一个`net.Socket`对象。
+```
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.end();
+});
+server.on('clientError', (err, socket) => {
+  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+});
+server.listen(8000);
+
+```
+
+当`clientError`事件发生,回调函数中不会有`request`和`response`对象,因此所有Http响应请求,包括响应头和有效载荷,必须直接的写入`socket`对象。
+必须确保按照正确的格式来响应信息。
+
+
+###Event:'close'
+
+`function (){}`
+
+当服务端`close`的时候触发。
+
+
+###Event:'connect'
+`function (request,socket,head){}`
+
+一个客户端请求一个http `CONNECT`方法时发送,如果事件未被侦听,当客户端请求`CONNECT`方法的时候讲关闭该链接。
+
+- `request` http请求参数,就像在request事件中一样。
+- `socket`  客户端和服务端之间的socket链接。
+- `head`    Buffer的一个实例,数据流的第一个包,有可能为空。
+
+事件发送之后,request's socket不会存在`data`事件处理,也就是说,你需要绑定处理函数,来处理通过socket发送到服务端的数据。
+
+###Event:'connection'
+`function (socket){}`
+
+当新的TCP流被建立,通常用户不需要处理该事件。特别的,协议解析器绑定socket时采用的方式使得socket不会发送`readable`事件。socket也可以在`request.connection`中被访问。
+
+###Event:'request'
+`function (request,response){}`
+
+每次请求都会触发事件。注意,每个链接都可能有大量的请求(在keep-alive链接的情况下)。`request`是`http.IncomingMessage`实例,`response`是`http.ServerResponse`实例。
+
+###Event:'upgrade'
+
+`function (request,socket,head){}`
+
+每次客户端请求一个http upgrade的时候触发。如果该事件未被侦听,客户端请求upgrade的时候就会被关闭。
+
+- `request` http request 参数,就像request事件中一样。
+- `socket`  服务端和客户端之间的socket链接
+- `head`    Buffer实例,upgrade流中的第一个包,可能为空。
+
+事件发送之后,request's socket不会存在`data`事件处理,也就是说,你需要绑定处理函数,来处理通过socket发送到服务端的数据。
+
+###server.close(\[callback\])
+停止接受新的连接,查看 `net.Server.close()`
+
+###server.listen(handle,\[,callback\])
+
+- `handle` \<Object\>
+- `callback` \<Function\>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
