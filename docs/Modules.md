@@ -92,6 +92,175 @@ Node.js查阅了所有加载模块的`realpath`,并且找到它们之间的依�
 
 ##All Together
 
+想要获取待加载模块的精确文件名,需要等`require()`执行之后,通过`require.resolve()`方法获取。
+
+以下是`require.resolve()`方法执行的伪代码
+
+```
+require(X) from module at path Y
+从Y文件夹中请求模块X
+
+1. If X is a core module, 如果X是核心模块
+   a. return the core module   返回核心模块
+   b. STOP
+2. If X begins with './' or '/' or '../'    如果X由'./' or '/' or '../'开始
+   a. LOAD_AS_FILE(Y + X)   通过Y+X加载文件,详细参考下面针对该方法的描述
+   b. LOAD_AS_DIRECTORY(Y + X)  通过Y+X加载文件夹,详细参考下面针对该方法的描述
+3. LOAD_NODE_MODULES(X, dirname(Y))
+4. THROW "not found" 抛出异常
+
+LOAD_AS_FILE(X)
+// X是文件,像js文件一样加载,stop
+1. If X is a file, load X as JavaScript text.  STOP
+// X.js是文件,像加载js文件一样加载,stop
+2. If X.js is a file, load X.js as JavaScript text.  STOP
+//X.json是一个文件,将X.json解析成一个js对象,stop
+3. If X.json is a file, parse X.json to a JavaScript Object.  STOP
+//X.node是一个文件,以二进制的形式加载X.node,stop
+4. If X.node is a file, load X.node as binary addon.  STOP
+
+LOAD_AS_DIRECTORY(X)
+
+// 如果X/package.json是一个文件
+1. If X/package.json is a file,
+    //解析X/package.json,查找"主"域
+   a. Parse X/package.json, and look for "main" field.
+   b. let M = X + (json main field)
+   c. LOAD_AS_FILE(M)
+2. If X/index.js is a file, load X/index.js as JavaScript text.  STOP
+3. If X/index.json is a file, parse X/index.json to a JavaScript object. STOP
+4. If X/index.node is a file, load X/index.node as binary addon.  STOP
+
+LOAD_NODE_MODULES(X, START)
+1. let DIRS=NODE_MODULES_PATHS(START)
+2. for each DIR in DIRS:
+   a. LOAD_AS_FILE(DIR/X)
+   b. LOAD_AS_DIRECTORY(DIR/X)
+
+NODE_MODULES_PATHS(START)
+1. let PARTS = path split(START)
+2. let I = count of PARTS - 1
+3. let DIRS = []
+4. while I >= 0,
+   a. if PARTS[I] = "node_modules" CONTINUE
+   c. DIR = path join(PARTS[0 .. I] + "node_modules")
+   b. DIRS = DIRS + DIR
+   c. let I = I - 1
+5. return DIRS
+
+
+```
+
+##缓存
+
+在第一次加载之后模块就被缓存了,也就是说,只要加载过一次,以后的每次加载都能够快速且精准的被找到。
+
+多次执行`require('foo')`,不会导致模块被多次执行。这是非常重要的特征。
+
+//不会翻译
+With it, "partially done" objects can be returned, thus allowing transitive dependencies to be loaded even when they would cause cycles.
+
+如果你想多次执行同一个模块,将它导出为一个方法,然后多次执行该方法。
+
+##模块缓存注意事项
+
+模块缓存是基于解析出来的文件名,由于模块能够根据存放的位置不同导致最终解析成不同的文件名,因此,如果你在不同的位置调用`require('foo')`,不能够保证总是能够获取同样的对象。
+
+另外,对于不区分大小写的文件系统或者操作系统,不同的文件名最后对于的可能是同一个文件,但是,缓存依然会将他们当成不同的模块多次加载。
+比如:`require('./foo')`和`require(./FOO)`返回两个不同的对象,而不管`./foo`和`./FOO`实际上是同一个文件。
+
+##核心模块
+Node.js有好几个模块编译成二进制数据。这些模块在本文档的其他地方有更详尽的描述。
+
+核心模块被定义在Node.js的源文件下面的`lib/`文件夹下。
+
+核心模块总是优先加载,比如,request('http')总是返回HTTP模块,即使有一个文件跟这个名字一样。
+
+
+##环
+
+当`require()`请求形成了一个环,有可能会有模块最终未被执行。
+比如以下这种情况:
+
+`a.js`
+
+```
+console.log('a starting');
+exports.done = false;
+const b = require('./b.js');
+console.log('in a, b.done = %j', b.done);
+exports.done = true;
+console.log('a done');
+
+```
+
+`b.js`
+
+```
+console.log('b starting');
+exports.done = false;
+const a = require('./a.js');
+console.log('in b, a.done = %j', a.done);
+exports.done = true;
+console.log('b done');
+
+```
+
+`main.js`
+
+```
+console.log('main starting');
+const a = require('./a.js');
+const b = require('./b.js');
+console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
+
+
+```
+
+当`main.js`加载`a.js`,`a.js`转而加载`b.js`,此时,`b.js`又试图加载`a.js`,为了避免形成无限循环,将一个未完成copy的`a.js`返回给`b.js`模块。
+待`b.js`完成加载之后,再将`b.js`导出并提供给`a.js`模块。
+
+这时`main.js`加载这两个模块,都能够完成,输出结果如下:
+
+```
+$ node main.js
+main starting
+a starting
+b starting
+in b, a.done = false
+b done
+in a, b.done = true
+a done
+in main, a.done=true, b.done=true
+
+```
+
+如果你的项目中出现了环形依赖,请按照上面的来。
+
+
+##文件模块
+
+如果文件未被找到,Node.js将试图在文件名后面添加扩展名来查找,比如:`.js`,`.json`,`.node`。
+
+`.js`文件被解释为js文件,`.json`文件被解释成Json文件,`.node`文件被解释成通过`dlopen`编译过的文件。
+
+模块请求前缀为`/`是绝对路径,比如:`require('/home/marco/foo.js')`将加载文件`/home/marco/foo.js`。
+
+模块请求前缀为`./`是相对路径,比如,`circle.js`必须和`foo.js`在同一个文件夹,才能够在`foo.js`中通过`require('./circle.js')`找到。
+
+如果没有`/`,`./`,`../`,那么该木块必须是核心模块,或者在`node_modules`文件夹中。
+
+如果通过以上方法都没有找到对应的文件,`require()`将抛出一个Error,且`code`属性被设置为`MODULE_NOT_FOUND`。
+
+
+##文件夹模块
+
+
+
+
+
+
+
 
 
 
