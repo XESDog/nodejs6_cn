@@ -269,6 +269,189 @@ in main, a.done=true, b.done=true
 
 package.json文件是Node.js意志的扩展。
 
+注意:如果通过`package.json`指定的`main`入口文件失效或者不能够解析。Node.js将抛出一个错误:
+
+`Error:Cannot find module 'some-library'`
+
+如果没有package.json文件在文件夹中,Node.js会试着去加载文件夹下的`index.js`或`index.node`文件。
+比如:如果没有package.json文件,require('./some-library')将试图加载:
+
+- `./some-library/index.js`
+- `./some-library/index.node`
+
+
+##从node_modules文件夹加载
+如果`require()`的不是本地模块,也没有`/`,`./`,`../`开始,Node.js会在模块的当前文件夹中创建一个`/node_modules`文件夹,
+并从其他位置加载模块。Node不会在`node_modules`的文件夹后面追加`node_modules`文件夹。
+
+例:如果文件`/home/ry/projects/foo.js`执行`require('bar.js)`,Node.js将按照以下顺序查找本地文件。
+
+- `/home/ry/projects/node_modules/bar.js`
+- `/home/ry/node_modules/bar.js`
+- `/home/node_modules/bar.js`
+- `/node_modules/bar.js`
+
+允许程序本地化依赖,解决冲突问题。
+
+你能够require指定文件或者模块,它们和模块一起分布,分布方式为,模块名+路径后缀。比如,`require('example-module/path/to/file')`
+会解析和本地路径`example-module`相对的路径`path/to/file`。后缀路径遵循同样的模块语义规则。
+
+
+## 从全局文件夹加载
+
+如果`NODE_PATH`环境变量设置了,如果该模块在其他地方都没有找到,Node.js将从环境变量中定义的路径开始查找。
+
+
+## 模块打包
+
+模块中的代码被执行之前,Node.js将用一个方法打包他们,看起来像下面这个样子:
+
+```
+
+(function (exports, require, module, __filename, __dirname) {
+// Your module code actually lives in here
+});
+
+```
+Node.js干了以下的事情:
+
+- 保留模版顶级变量作用域,而不是使用全局对象
+- 提供全局变量,实际上是具体的模块,比如
+
+    -  `module`和`export`对象的实现者,能够从模块中导出值
+    - `__filename`和`__dirname`变量,表示模块的绝对文件名和文件路径
+
+## 模块对象
+
+- \<Object>
+
+每个模块,`module`变量表示当前模块。为了方便,`module.exports`也能够通过`exports`访问,`module`虽然在每个模块都有该对象,但是他并不是全局变量,
+只是在每个模块中都对其做了设置。
+
+### module.children
+- \<Array>
+
+该模块所需的对象
+
+###module.exports
+- \<Object>
+
+`module.exports`对象通过模块系统创建。有时候它也是不被接受的。
+你可能想将模块定义为一个类的对象,你可以这么做,用`module.exports`来导出你希望使用的对象。
+注意,为`exports`分配你希望导出的对象会简单的重新绑定本地`export`变量,可能这并不是你想要的。
+
+比如,假设我们写了这样一个文件`a.js`
+
+
+```
+const EventEmitter = require('events');
+
+module.exports = new EventEmitter();
+
+// Do some work, and after some time emit
+// the 'ready' event from the module itself.
+setTimeout(() => {
+  module.exports.emit('ready');
+}, 1000);
+
+
+```
+
+另外一个文件可以这么干
+
+```
+const a = require('./a');
+a.on('ready', () => {
+  console.log('module a is ready');
+});
+
+```
+
+
+注意:分配`module.exports`会立即执行,但是像下面这么干,是不能得到你想要的结果滴。
+
+x.js
+
+```
+setTimeout(() => {
+  module.exports = { a: 'hello' };
+}, 0);
+
+
+
+```
+
+y.js
+
+```
+const x = require('./x');
+console.log(x.a);
+
+```
+
+###导出化名
+
+在模块开始的时候,`exports`作为`module.exports`的引用是可用的。就想其他的变量一样,如果分配了一个新的值,它将不会再绑定到以前的值。
+
+请看下面的代码,简单的阐述了一下`require()`的实现:
+
+```
+function require(...) {
+  // ...
+  ((module, exports) => {
+    // Your module code here
+    exports = some_func;        // re-assigns exports, exports is no longer
+                                // a shortcut, and nothing is exported.
+    module.exports = some_func; // makes your module export 0
+  })(module, module.exports);
+  return module;
+}
+
+```
+
+`exports`和`module.exports`的关系就像互相镜像,你可以忽略`exports`仅使用`module.exports`。
+
+###module.filename
+
+- \<String>
+
+模块的全名
+
+###module.id
+- \<String>
+模块标识,通常这是模块的全名
+
+###module.loaded
+- \<Boolean>
+
+是否模块完成了加载,还是正在加载中。
+
+
+###module.parent
+- \<Object> Module对象
+
+第一次请求该模块的对象
+
+### module.require(id)
+- id\<String>
+- Return:\<Object> `module.exports` 解析之后的模块
+
+`module.require`提供了加载模块的方法,就像使用`require()`一样。
+
+注意,想要做到这点,你必须获取该`module`对象的引用,由于`require()`返回`module.exports`,
+并且,`module`仅在指定模块代码中可用,它必须被明确的导出。
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
