@@ -255,6 +255,20 @@ in main, a.done=true, b.done=true
 
 ##文件夹模块
 
+我非常方便的组织程序和库到自己的文件夹中,并且为库提供一个独立的入口。这里有3种方法能够将文件夹传递到`require()`。
+
+第一个方法就是在跟目录创建`package.json`,用它指定一个`main`模块。想这样:
+
+```
+{ "name" : "some-library",
+  "main" : "./lib/some-library.js" }
+
+```
+
+如果该文件在 `./some-library` 文件夹,`require('./some-library')`将试图去加载`./some-library/lib/some-library.js`。
+
+package.json文件是Node.js意志的扩展。
+
 
 
 
