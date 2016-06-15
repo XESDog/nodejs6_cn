@@ -5,3 +5,6 @@
 - [Debugger](docs/Debugger.md)
 - [HTTP](docs/http.md)
 - [Modules](docs/Modules.md)
+- [OS](docs/OS.md)
+- [ReadLine](docs/Readline.md)
+- [Timers](docs/Timers.md)
