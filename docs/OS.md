@@ -6,9 +6,9 @@
 
 
 以下是我机器截图,供参考
-![](../images/os_1.png)
-![](../images/os_2.png)
-![](../images/os_3.png)
+![](../images/os_1.jpg)
+![](../images/os_2.jpg)
+![](../images/os_3.jpg)
 
 
 ##os.EOL
