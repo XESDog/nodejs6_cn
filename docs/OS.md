@@ -5,6 +5,12 @@
 使用require('os')来访问该模块
 
 
+以下是我机器截图,供参考
+![](../images/os_1.png)
+![](../images/os_2.png)
+![](../images/os_3.png)
+
+
 ##os.EOL
 一个常量,操作系统行尾标识。
 
