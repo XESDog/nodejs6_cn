@@ -409,6 +409,150 @@ server.listen(8000);
 - `handle` \<Object\>
 - `callback` \<Function\>
 
+`handle`能够被设置为一个`server`或`socket`对象。
+这将导致server在指定的handle上接受一个连接,但是,它被假设该文件描述符或handle已经被绑定到一个端口或者域socket。
+
+侦听文件描述符在windows中不被支持。
+
+该方法是一步的,最后的参数callback将被作为一个侦听器添加到`listening`事件。see `net.Server.listen()`。
+
+返回 `server`。
+
+
+###server.listen(path,\[,callback])
+为给出的`path`上建立的连接启动一个UNIX socket server 侦听。
+
+该方法是一步的。最后的参数callback将被作为一个侦听器添加到`listenling`事件。see `net.Server.listen(path)`。
+
+###server.listen(port\[,hostname]\[,backlog]\[,callback])
+在指定的port,hostname上开始接收连接。如果hostname被忽略,且IPv6可用的时候,服务器将接受任何IPv6地址(`::`)的连接,
+或者除开IPv4地址(`0.0.0.0`)的任何连接。port值如果为0,则随机分配一个端口号。
+
+侦听一个UNIX socket,提供一个filename而不是端口号和主机名。
+
+Backlog是排列等待连接的极限长度,实际长度由系统决定,在linux中则通过`tcp_max_syn_backlog`和`somaxconn`决定。
+默认值是511(不是512)
+
+该方法是一步的,最后的参数callback将被作为一个侦听器添加到`listenling`事件。see `net.Server.listen(port)`。
+
+###server.listening
+一个布尔值,表示是否服务器处于侦听状态。
+
+###server.maxHeadersCount
+最大的传入header的数量,默认等于1000,如果设置为0,则被设置为无限。
+
+###server.setTimeout(msecs,callback)
+- `msecs` \<Number>
+- `callback` \<Function>
+
+设置socket超时的值。如果超时发生,通过server对象发送`timeout`事件,将socket作为参数传递。
+
+默认,server超时值为2分钟,如果曹氏,socket将被销毁。无论如何,如果你分配给server一个超时事件,那么你需要自己负责处理好超时事件。
+
+返回server。
+
+###server.timeout
+- \<Number> 默认=120000(2分钟)
+socket超时未发生的时候,该值是不变的。
+
+注意,socket的逻辑是在连接的时候设置的。因此,修改这个值仅能影响新的server连接,不会对已经存在的连接产生任何影响。
+
+设置为0将在禁止任何种类的超时行为。
+
+##http.ServerResponse类
+
+该对象通过HTTP server在内部创建——不是通过用户创建的。它被当成第二个参数传递到`request`事件中。
+
+response实现但不继承Writable Stream接口。
+
+###Event:'close'
+`function(){}`
+表明底层连接被在response.end()被执行之前被中断,或者能够flush。
+
+###Event:'finish'
+`function(){}`
+response被发送的时候触发。更具体的说,该事件在最后一段head和body被移交到操作系统做网络传输的时候触发。
+这并不表示客户端移交收到什么了。
+
+该事件之后,跟多的事件将通过response对象发送。
+
+###response.addTrailer(header)
+
+该方法为response添加HTTP头信息的尾部
+
+trailer在response中仅用作块编码。如果不是,它将默默的被丢弃。
+
+注意,trailer部分会跟header信息的其他值一起发送,你不必单独对他做什么。
+
+```
+response.writeHead(200, { 'Content-Type': 'text/plain',
+                          'Trailer': 'Content-MD5' });
+response.write(fileData);
+response.addTrailers({'Content-MD5': '7895bf4b8828b55ceaf47747b4bca667'});
+response.end();
+
+```
+
+试图设置一个包含无效字符的header属性的名称或值返回`TypeError`异常。
+
+
+###response.end(\[data]\[,encoding]\[,callback])
+
+向服务端发出信号,response的header和body已经被发送。server应该考虑完成的情况
+response.end()必须在每次回复的时候发送。
+
+if `data` 被指定,其实相当于先调用response.write(data,encoding),然后执行 response.end(callback)
+
+if  `callback`被指定,它将在response stream完成的时候执行。
+
+###response.finished
+
+布尔型,申明是否回复完成。开始是`false`。执行response.end()之后,值变为true。
+
+###response.getHeader(name)
+
+读取已经在排队当是还没有发送的header。注意,名字不区分大小写。该方法仅在header得到隐式刷新之后被调用。
+
+
+例:
+
+```
+var contentType = response.getHeader('content-type');
+
+```
+
+###response.headersSent
+
+只读,布尔型,header被发送为true,否则为false
+
+###response.removeHeader(name)
+
+删除队列中隐式发送的header
+
+```
+response.removeHeader('Content-Encoding');
+
+```
+
+###response.sendDate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
