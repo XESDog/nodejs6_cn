@@ -117,3 +117,92 @@ exec('cat *.js bad_file | wc -l', (error, stdout, stderr) => {
 });
 
 ```
+
+如果提供了callback。它将和参数(error,stdout,stderr)一起执行。执行成功error将为null。如果错误,error将是一个Error对象。
+error.code属性为子进程的退出码,而error.signal将被设置为终止进程的信号。任何非0得退出码都将被认为是错误。
+
+传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。
+encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是`buffer`,一个Buffer对象将被传递到callback。
+
+options参数作为第二个参数,用来定义如何生成进程。默认选项为:
+
+```
+{
+  encoding: 'utf8',
+  timeout: 0,
+  maxBuffer: 200*1024,
+  killSignal: 'SIGTERM',
+  cwd: null,
+  env: null
+}
+
+```
+如果设置timeout大于0,单子进程运行超过timeout毫秒之后,父进程将发送`killSignal`属性的信号标识(默认为`SIGTERM`)。
+
+注意:不想执行POSIX系统调用,`child_process.exec()`没有代替已经存在的进程,而是使用一个shell来执行命令。
+
+###child_process.execFile(file\[,arg]\[,options]\[,callback])
+
+- file \<String> 可执行文件的名称,或运行的地址
+- args \<Array> string参数列表
+- options \<Object>
+    - `cwd` \<String> 子进程当前工作目录
+    - `env` \<Object> 环境变量的键值对
+    - `encoding` \<String> 默认为`utf8`
+    - `shell` \<String> 要执行的命令(默认:UNIX下为`/bin/sh`,Windows下为`cmd.exe`)
+    - `timeout` \<Number> 默认为0
+    - `maxBuffer` \<Number> 允许stdout或stderr的最大数据量(单位:byte),超出的部分将被kill(默认:200*1024)
+    - `killSIgnal` \<String> (默认:`SIGTERM`)
+    - `uid` \<Number> 设置进程的用户标识
+    - `gid` \<Number> 设置进程的组标识
+- callback \<Function> 当进程终止时被执行并输出
+    - error \<Error>
+    - stdout \<String>|\<Buffer>
+    - stderr \<String>|\<Buffer>
+- Return:\<ChildProcess>
+
+child_process.execFile()方法类似child_process.exec(),区别在它不生成一个shell。当然,指定的可执行文件像一个新进程被直接生成,
+使得相比child_process.exec()更加有效率一点。
+
+同样也支持options参数。由于没有生成一个shell,一些行为像I/O重定向以及文件通配符都不被支持。
+
+```
+const execFile = require('child_process').execFile;
+const child = execFile('node', ['--version'], (error, stdout, stderr) => {
+  if (error) {
+    throw error;
+  }
+  console.log(stdout);
+});
+
+```
+
+传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。
+encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是`buffer`,一个Buffer对象将被传递到callback。
+
+###child_process.fork(modulePath\[,arg]\[,options])
+
+- modulePath \<String> 该模版在子进程中运行
+- args \<Array> string参数列表
+- options \<Object>
+    - `cwd` \<String> 子进程当前工作目录
+    - `env` \<Object> 环境变量的键值对
+    - `execPath` \<String> 用来创建可执行的子进程
+    - `execArgv` \<Array> 传递给可执行子进程的string参数列表(默认:process.execArgv)
+    - `silent` \<Boolean> 如果为true,stdin,stdout,stderr将建立子进程到父进程的管道,否则将从父进程继承,
+    参考child_process.spawn()的`stdio`的`pipe`和`inherit`参数来了解更多(默认:false)
+    - `uid` \<Number> 设置进程的用户标识
+    - `gid` \<Number> 设置进程的组标识
+- callback \<Function> 当进程终止时被执行并输出
+    - error \<Error>
+    - stdout \<String>|\<Buffer>
+    - stderr \<String>|\<Buffer>
+- Return:\<ChildProcess>
+
+`child_process.fork()`方法是`child_process.spawn()`的一个特殊情况,用来明确的创建一个新的Node.js进程。
+`child_process.spawn()`将返回一个ChildProcess对象。该返回对象将构建子和父之间的双向通信信道。查看`child.send()`了解更多。
+
+
+
+
+
