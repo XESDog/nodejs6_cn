@@ -1,6 +1,10 @@
 #Child Process
 
-`child_process`模块提供一种能力,不一样,但近似的方式来执行子进程,该能力主要通过`child_process.spawn()`方法提供。
+`child_process`能够以一种近似但不同于[popen(3)](http://man7.org/linux/man-pages/man3/popen.3.html)的方式来生成子进程,
+该功能主要由`child_process.spawn()`提供。
+
+译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.
+管道定义为单向的,参数type表明是读还是写,不能两者兼有。响应的产生的流也是只读或者只写。
 
 
 ```
@@ -21,9 +25,8 @@ ls.on('close', (code) => {
 
 ```
 
-默认,`stdin`,`stdout`,`stderr`管道在父Node.js进程和子进程之间建立。它能够通过一种无阻塞的方法传输数据。注意,
-一些程序使用另外的方式,比如,line-bufferedI/O internally。不过,这并不影响Node.js,它意味着发送给子进程的数据
-不会立即耗尽。
+默认,`stdin`,`stdout`,`stderr`管道在父Node.js进程和生成的子进程之间建立。它能够通过一种无阻塞的方法传输数据。注意,
+一些程序使用内部的 line-bufferedI/O。然而这并不影响Node.js,它意味着发送给子进程的数据不会立即销毁。
 
 `child_process.spawn()`方法生成异步子进程,不会阻断Node.js事件循环。
 `child_process.spawnSync()`方法提供一个一样的方法,只不过该方法是同步的,它能够阻断事件循环,直到生成的进程退出或者被终止。

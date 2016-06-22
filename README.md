@@ -8,6 +8,7 @@
 - [HTTP](docs/http.md)
 - [Modules](docs/Modules.md)
 - [OS](docs/OS.md)
+- [Process](docs/Process.md)
 - [ReadLine](docs/Readline.md)
 - [Timers](docs/Timers.md)
 
