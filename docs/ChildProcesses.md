@@ -139,7 +139,7 @@ options参数作为第二个参数,用来定义如何生成进程。默认选项
 ```
 如果设置timeout大于0,单子进程运行超过timeout毫秒之后,父进程将发送`killSignal`属性的信号标识(默认为`SIGTERM`)。
 
-注意:不想执行POSIX系统调用,`child_process.exec()`没有代替已经存在的进程,而是使用一个shell来执行命令。
+注意:不像POSIX系统调用,`child_process.exec()`没有代替已经存在的进程,而是使用一个shell来执行命令。
 
 ###child_process.execFile(file\[,arg]\[,options]\[,callback])
 
@@ -201,6 +201,45 @@ encoding选项被用来指定解码stdout和stderr输出的字符编码。如果
 
 `child_process.fork()`方法是`child_process.spawn()`的一个特殊情况,用来明确的创建一个新的Node.js进程。
 `child_process.spawn()`将返回一个ChildProcess对象。该返回对象将构建子和父之间的双向通信信道。查看`child.send()`了解更多。
+
+需要记住,生成Node.js子进程不依赖父进程,除非IPC通信信道简历在两者之间。每个进程有其自己的内存,和他们自己的V8实例。
+由于额外的资源分配请求,不推荐生成多个Node.js子进程。
+
+默认,child_process.fork()将生成新的Node.js实例,使用父进程的process.execPath。options里面的execPath属性允许使用另外的执行路径。
+
+通过自定义execPath执行得到的Node.js进程,将和父进程使用子进程的环境变量NODE_CHANNEL_FD定义的标识进行通讯。
+fd上的输入和输出被期望行分(line delimited)JSON对象。
+
+注意:不同于fork POSIX 系统调用,child_process.fork()不clone当前进程。
+
+###child_process.spawn(command,\[,arg]\[,options])
+
+- command \<String> 运行的命令
+- args \<Array> string参数列表
+- options \<Object>
+    - cwd \<String> 当前子进程的工作目录
+    - env \<Object> 环境变量的键值对
+    - stdio \<Array> | \<String> 子进程的 stdio 配置. (See options.stdio)
+    - detached \<Boolean> 预备将子进程独立于父进程运行. 具体行为区别于平台, (see options.detached)
+    - uid \<Number> 设置进程的用户标识 (See setuid(2).)
+    - gid \<Number> 设置进程的组标识 (See setgid(2).)
+    - shell \<Boolean> | \<String> 如果为true,在shell中运行命令,UNIX使用`/bin/sh`,Windows使用`cmd.exe`。
+    一个不同的shell使用字符串来指定。shell应该明白UNIX中的-c,或Windows中的/s /c。默认为false(没有shell)
+- return:\<ChildProcess>
+
+child_process.spawn()方法使用提供的命令生成一个新的进程,参数在args中指出。如果忽略,args默认为空数组。
+
+第三个参数被用来指定额外的选项,默认为:
+```
+{
+    cwd:undefined,
+    env:process.env
+}
+
+```
+
+使用cwd指定工作目录
+
 
 
 
