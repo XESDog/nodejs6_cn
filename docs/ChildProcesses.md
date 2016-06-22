@@ -1,5 +1,7 @@
 #Child Process
 
+[TOC]
+
 `child_process`能够以一种近似但不同于[popen(3)](http://man7.org/linux/man-pages/man3/popen.3.html)的方式来生成子进程,
 该功能主要由`child_process.spawn()`提供。
 
@@ -144,7 +146,9 @@ options参数作为第二个参数,用来定义如何生成进程。默认选项
 
 注意:不像POSIX系统调用,`child_process.exec()`没有代替已经存在的进程,而是使用一个shell来执行命令。
 
-###child_process.execFile(file\[,arg]\[,options]\[,callback])
+
+
+### child_process.execFile(file\[,arg]\[,options]\[,callback])
 
 - file \<String> 可执行文件的名称,或运行的地址
 - args \<Array> string参数列表
@@ -242,6 +246,7 @@ child_process.spawn()方法使用提供的命令生成一个新的进程,参数�
 ```
 
 使用cwd指定工作目录
+
 
 
 

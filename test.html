@@ -1,0 +1,1331 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><title>test</title></head><body><article class="markdown-body"><h1 id="title"><a name="user-content-title" href="#title" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>title</h1>
+<h2 id="title2"><a name="user-content-title2" href="#title2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>title2</h2>
+<h3 id="title3"><a name="user-content-title3" href="#title3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>title3</h3>
+<p>About these Docs<br />
+Usage &amp; Example<br />
+Assertion Testing<br />
+Buffer<br />
+C/C++ Addons<br />
+Child Processes<br />
+Cluster<br />
+Command Line Options<br />
+Console<br />
+Crypto<br />
+Debugger<br />
+DNS<br />
+Domain<br />
+Errors<br />
+Events<br />
+File System<br />
+Globals<br />
+HTTP<br />
+HTTPS<br />
+Modules<br />
+Net<br />
+OS<br />
+Path<br />
+Process<br />
+Punycode<br />
+Query Strings<br />
+Readline<br />
+REPL<br />
+Stream<br />
+String Decoder<br />
+Timers<br />
+TLS/SSL<br />
+TTY<br />
+UDP/Datagram<br />
+URL<br />
+Utilities<br />
+V8<br />
+VM<br />
+ZLIB<br />
+GitHub Repo &amp; Issue Tracker<br />
+Mailing List<br />
+Node.js v6.2.2 Documentation<br />
+Index | View on single page | View as JSON</p>
+<p>Child Process<br />
+Asynchronous Process Creation<br />
+Spawning .bat and .cmd files on Windows<br />
+child_process.exec(command[, options][, callback])<br />
+child_process.execFile(file[, args][, options][, callback])<br />
+child_process.fork(modulePath[, args][, options])<br />
+child_process.spawn(command[, args][, options])<br />
+options.detached<br />
+options.stdio<br />
+Synchronous Process Creation<br />
+child_process.execFileSync(file[, args][, options])<br />
+child_process.execSync(command[, options])<br />
+child_process.spawnSync(command[, args][, options])<br />
+Class: ChildProcess<br />
+Event: &lsquo;close&rsquo;<br />
+Event: &lsquo;disconnect&rsquo;<br />
+Event: &lsquo;error&rsquo;<br />
+Event: &lsquo;exit&rsquo;<br />
+Event: &lsquo;message&rsquo;<br />
+child.connected<br />
+child.disconnect()<br />
+child.kill([signal])<br />
+child.pid<br />
+child.send(message[, sendHandle[, options]][, callback])<br />
+Example: sending a server object<br />
+Example: sending a socket object<br />
+child.stderr<br />
+child.stdin<br />
+child.stdio<br />
+child.stdout<br />
+maxBuffer and Unicode<br />
+Child Process#</p>
+<p>Stability: 2 - Stable<br />
+The child_process module provides the ability to spawn child processes in a manner that is similar, but not identical, to popen(3). This capability is primarily provided by the child_process.spawn() function:</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;<br />
+const ls = spawn(&lsquo;ls&rsquo;, [&lsquo;-lh&rsquo;, &lsquo;/usr&rsquo;]);</p>
+<p>ls.stdout.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>stdout: ${data}</code>);<br />
+});</p>
+<p>ls.stderr.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>stderr: ${data}</code>);<br />
+});</p>
+<p>ls.on(&lsquo;close&rsquo;, (code) =&gt; {<br />
+  console.log(<code>child process exited with code ${code}</code>);<br />
+});<br />
+By default, pipes for stdin, stdout and stderr are established between the parent Node.js process and the spawned child. It is possible to stream data through these pipes in a non-blocking way. Note, however, that some programs use line-buffered I/O internally. While that does not affect Node.js, it can mean that data sent to the child process may not be immediately consumed.</p>
+<p>The child_process.spawn() method spawns the child process asynchronously, without blocking the Node.js event loop. The child_process.spawnSync() function provides equivalent functionality in a synchronous manner that blocks the event loop until the spawned process either exits or is terminated.</p>
+<p>For convenience, the child_process module provides a handful of synchronous and asynchronous alternatives to child_process.spawn() and child_process.spawnSync(). Note that each of these alternatives are implemented on top of child_process.spawn() or child_process.spawnSync().</p>
+<p>child_process.exec(): spawns a shell and runs a command within that shell, passing the stdout and stderr to a callback function when complete.<br />
+child_process.execFile(): similar to child_process.exec() except that it spawns the command directly without first spawning a shell.<br />
+child_process.fork(): spawns a new Node.js process and invokes a specified module with an IPC communication channel established that allows sending messages between parent and child.<br />
+child_process.execSync(): a synchronous version of child_process.exec() that will block the Node.js event loop.<br />
+child_process.execFileSync(): a synchronous version of child_process.execFile() that will block the Node.js event loop.<br />
+For certain use cases, such as automating shell scripts, the synchronous counterparts may be more convenient. In many cases, however, the synchronous methods can have significant impact on performance due to stalling the event loop while spawned processes complete.</p>
+<p>Asynchronous Process Creation#<br />
+The child_process.spawn(), child_process.fork(), child_process.exec(), and child_process.execFile() methods all follow the idiomatic asynchronous programming pattern typical of other Node.js APIs.</p>
+<p>Each of the methods returns a ChildProcess instance. These objects implement the Node.js EventEmitter API, allowing the parent process to register listener functions that are called when certain events occur during the life cycle of the child process.</p>
+<p>const execFile = require(&lsquo;child_process&rsquo;).execFile;<br />
+const child = execFile(&lsquo;node&rsquo;, [&lsquo;&ndash;version&rsquo;], (error, stdout, stderr) =&gt; {<br />
+  if (error) {<br />
+    throw error;<br />
+  }<br />
+  console.log(stdout);<br />
+});<br />
+The stdout and stderr arguments passed to the callback will contain the stdout and stderr output of the child process. By default, Node.js will decode the output as UTF-8 and pass strings to the callback. The encoding option can be used to specify the character encoding used to decode the stdout and stderr output. If encoding is &lsquo;buffer&rsquo;, Buffer objects will be passed to the callback instead.</p>
+<p>child_process.fork(modulePath[, args][, options])#</p>
+<p>Added in: v0.5.0<br />
+modulePath <String> The module to run in the child<br />
+args <Array> List of string arguments<br />
+options <Object><br />
+cwd <String> Current working directory of the child process<br />
+env <Object> Environment key-value pairs<br />
+execPath <String> Executable used to create the child process<br />
+execArgv <Array> List of string arguments passed to the executable (Default: process.execArgv)<br />
+silent <Boolean> If true, stdin, stdout, and stderr of the child will be piped to the parent, otherwise they will be inherited from the parent, see the &lsquo;pipe&rsquo; and &lsquo;inherit&rsquo; options for child_process.spawn()&rsquo;s stdio for more details (Default: false)<br />
+uid <Number> Sets the user identity of the process. (See setuid(2).)<br />
+gid <Number> Sets the group identity of the process. (See setgid(2).)<br />
+Return: <ChildProcess><br />
+The child_process.fork() method is a special case of child_process.spawn() used specifically to spawn new Node.js processes. Like child_process.spawn(), a ChildProcess object is returned. The returned ChildProcess will have an additional communication channel built-in that allows messages to be passed back and forth between the parent and child. See child.send() for details.</p>
+<p>It is important to keep in mind that spawned Node.js child processes are independent of the parent with exception of the IPC communication channel that is established between the two. Each process has it&rsquo;s own memory, with their own V8 instances. Because of the additional resource allocations required, spawning a large number of child Node.js processes is not recommended.</p>
+<p>By default, child_process.fork() will spawn new Node.js instances using the process.execPath of the parent process. The execPath property in the options object allows for an alternative execution path to be used.</p>
+<p>Node.js processes launched with a custom execPath will communicate with the parent process using the file descriptor (fd) identified using the environment variable NODE_CHANNEL_FD on the child process. The input and output on this fd is expected to be line delimited JSON objects.</p>
+<p>Note: Unlike the fork(2) POSIX system call, child_process.fork() does not clone the current process.</p>
+<p>child_process.spawn(command[, args][, options])#</p>
+<p>Added in: v0.1.90<br />
+command <String> The command to run<br />
+args <Array> List of string arguments<br />
+options <Object><br />
+cwd <String> Current working directory of the child process<br />
+env <Object> Environment key-value pairs<br />
+stdio <Array> | <String> Child&rsquo;s stdio configuration. (See options.stdio)<br />
+detached <Boolean> Prepare child to run independently of its parent process. Specific behavior depends on the platform, see options.detached)<br />
+uid <Number> Sets the user identity of the process. (See setuid(2).)<br />
+gid <Number> Sets the group identity of the process. (See setgid(2).)<br />
+shell <Boolean> | <String> If true, runs command inside of a shell. Uses &lsquo;/bin/sh&rsquo; on UNIX, and &lsquo;cmd.exe&rsquo; on Windows. A different shell can be specified as a string. The shell should understand the -c switch on UNIX, or /s /c on Windows. Defaults to false (no shell).<br />
+return: <ChildProcess><br />
+The child_process.spawn() method spawns a new process using the given command, with command line arguments in args. If omitted, args defaults to an empty array.</p>
+<p>A third argument may be used to specify additional options, with these defaults:</p>
+<p>{<br />
+  cwd: undefined,<br />
+  env: process.env<br />
+}<br />
+Use cwd to specify the working directory from which the process is spawned. If not given, the default is to inherit the current working directory.</p>
+<p>Use env to specify environment variables that will be visible to the new process, the default is process.env.</p>
+<p>Example of running ls -lh /usr, capturing stdout, stderr, and the exit code:</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;<br />
+const ls = spawn(&lsquo;ls&rsquo;, [&lsquo;-lh&rsquo;, &lsquo;/usr&rsquo;]);</p>
+<p>ls.stdout.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>stdout: ${data}</code>);<br />
+});</p>
+<p>ls.stderr.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>stderr: ${data}</code>);<br />
+});</p>
+<p>ls.on(&lsquo;close&rsquo;, (code) =&gt; {<br />
+  console.log(<code>child process exited with code ${code}</code>);<br />
+});<br />
+Example: A very elaborate way to run ps ax | grep ssh</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;<br />
+const ps = spawn(&lsquo;ps&rsquo;, [&lsquo;ax&rsquo;]);<br />
+const grep = spawn(&lsquo;grep&rsquo;, [&lsquo;ssh&rsquo;]);</p>
+<p>ps.stdout.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  grep.stdin.write(data);<br />
+});</p>
+<p>ps.stderr.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>ps stderr: ${data}</code>);<br />
+});</p>
+<p>ps.on(&lsquo;close&rsquo;, (code) =&gt; {<br />
+  if (code !== 0) {<br />
+    console.log(<code>ps process exited with code ${code}</code>);<br />
+  }<br />
+  grep.stdin.end();<br />
+});</p>
+<p>grep.stdout.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>${data}</code>);<br />
+});</p>
+<p>grep.stderr.on(&lsquo;data&rsquo;, (data) =&gt; {<br />
+  console.log(<code>grep stderr: ${data}</code>);<br />
+});</p>
+<p>grep.on(&lsquo;close&rsquo;, (code) =&gt; {<br />
+  if (code !== 0) {<br />
+    console.log(<code>grep process exited with code ${code}</code>);<br />
+  }<br />
+});<br />
+Example of checking for failed exec:</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;<br />
+const child = spawn(&lsquo;bad_command&rsquo;);</p>
+<p>child.on(&lsquo;error&rsquo;, (err) =&gt; {<br />
+  console.log(&lsquo;Failed to start child process.&rsquo;);<br />
+});<br />
+options.detached#</p>
+<p>Added in: v0.7.10<br />
+On Windows, setting options.detached to true makes it possible for the child process to continue running after the parent exits. The child will have its own console window. Once enabled for a child process, it cannot be disabled.</p>
+<p>On non-Windows platforms, if options.detached is set to true, the child process will be made the leader of a new process group and session. Note that child processes may continue running after the parent exits regardless of whether they are detached or not. See setsid(2) for more information.</p>
+<p>By default, the parent will wait for the detached child to exit. To prevent the parent from waiting for a given child, use the child.unref() method. Doing so will cause the parent&rsquo;s event loop to not include the child in its reference count, allowing the parent to exit independently of the child, unless there is an established IPC channel between the child and parent.</p>
+<p>When using the detached option to start a long-running process, the process will not stay running in the background after the parent exits unless it is provided with a stdio configuration that is not connected to the parent. If the parent&rsquo;s stdio is inherited, the child will remain attached to the controlling terminal.</p>
+<p>Example of a long-running process, by detaching and also ignoring its parent stdio file descriptors, in order to ignore the parent&rsquo;s termination:</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;</p>
+<p>const child = spawn(process.argv[0], [&lsquo;child_program.js&rsquo;], {<br />
+  detached: true,<br />
+  stdio: [&lsquo;ignore&rsquo;]<br />
+});</p>
+<p>child.unref();<br />
+Alternatively one can redirect the child process&rsquo; output into files:</p>
+<p>const fs = require(&lsquo;fs&rsquo;);<br />
+const spawn = require(&lsquo;child_process&rsquo;).spawn;<br />
+const out = fs.openSync(&lsquo;./out.log&rsquo;, &lsquo;a&rsquo;);<br />
+const err = fs.openSync(&lsquo;./out.log&rsquo;, &lsquo;a&rsquo;);</p>
+<p>const child = spawn(&lsquo;prg&rsquo;, [], {<br />
+ detached: true,<br />
+ stdio: [ &lsquo;ignore&rsquo;, out, err ]<br />
+});</p>
+<p>child.unref();<br />
+options.stdio#</p>
+<p>Added in: v0.7.10<br />
+The options.stdio option is used to configure the pipes that are established between the parent and child process. By default, the child&rsquo;s stdin, stdout, and stderr are redirected to corresponding child.stdin, child.stdout, and child.stderr streams on the ChildProcess object. This is equivalent to setting the options.stdio equal to [&lsquo;pipe&rsquo;, &lsquo;pipe&rsquo;, &lsquo;pipe&rsquo;].</p>
+<p>For convenience, options.stdio may be one of the following strings:</p>
+<p>&lsquo;pipe&rsquo; - equivalent to [&lsquo;pipe&rsquo;, &lsquo;pipe&rsquo;, &lsquo;pipe&rsquo;] (the default)<br />
+&lsquo;ignore&rsquo; - equivalent to [&lsquo;ignore&rsquo;, &lsquo;ignore&rsquo;, &lsquo;ignore&rsquo;]<br />
+&lsquo;inherit&rsquo; - equivalent to [process.stdin, process.stdout, process.stderr] or [0,1,2]<br />
+Otherwise, the value of options.stdio is an array where each index corresponds to an fd in the child. The fds 0, 1, and 2 correspond to stdin, stdout, and stderr, respectively. Additional fds can be specified to create additional pipes between the parent and child. The value is one of the following:</p>
+<p>&lsquo;pipe&rsquo; - Create a pipe between the child process and the parent process. The parent end of the pipe is exposed to the parent as a property on the child_process object as child.stdio[fd]. Pipes created for fds 0 - 2 are also available as child.stdin, child.stdout and child.stderr, respectively.<br />
+&lsquo;ipc&rsquo; - Create an IPC channel for passing messages/file descriptors between parent and child. A ChildProcess may have at most one IPC stdio file descriptor. Setting this option enables the child.send() method. If the child writes JSON messages to this file descriptor, the child.on(&lsquo;message&rsquo;) event handler will be triggered in the parent. If the child is a Node.js process, the presence of an IPC channel will enable process.send(), process.disconnect(), process.on(&lsquo;disconnect&rsquo;), and process.on(&lsquo;message&rsquo;) within the child.<br />
+&lsquo;ignore&rsquo; - Instructs Node.js to ignore the fd in the child. While Node.js will always open fds 0 - 2 for the processes it spawns, setting the fd to &lsquo;ignore&rsquo; will cause Node.js to open /dev/null and attach it to the child&rsquo;s fd.<br />
+<Stream> object - Share a readable or writable stream that refers to a tty, file, socket, or a pipe with the child process. The stream&rsquo;s underlying file descriptor is duplicated in the child process to the fd that corresponds to the index in the stdio array. Note that the stream must have an underlying descriptor (file streams do not until the &lsquo;open&rsquo; event has occurred).<br />
+Positive integer - The integer value is interpreted as a file descriptor that is is currently open in the parent process. It is shared with the child process, similar to how <Stream> objects can be shared.<br />
+null, undefined - Use default value. For stdio fds 0, 1 and 2 (in other words, stdin, stdout, and stderr) a pipe is created. For fd 3 and up, the default is &lsquo;ignore&rsquo;.<br />
+Example:</p>
+<p>const spawn = require(&lsquo;child_process&rsquo;).spawn;</p>
+<p>// Child will use parent&rsquo;s stdios<br />
+spawn(&lsquo;prg&rsquo;, [], { stdio: &lsquo;inherit&rsquo; });</p>
+<p>// Spawn child sharing only stderr<br />
+spawn(&lsquo;prg&rsquo;, [], { stdio: [&lsquo;pipe&rsquo;, &lsquo;pipe&rsquo;, process.stderr] });</p>
+<p>// Open an extra fd=4, to interact with programs presenting a<br />
+// startd-style interface.<br />
+spawn(&lsquo;prg&rsquo;, [], { stdio: [&lsquo;pipe&rsquo;, null, null, null, &lsquo;pipe&rsquo;] });<br />
+It is worth noting that when an IPC channel is established between the parent and child processes, and the child is a Node.js process, the child is launched with the IPC channel unreferenced (using unref()) until the child registers an event handler for the process.on(&lsquo;disconnect&rsquo;) event. This allows the child to exit normally without the process being held open by the open IPC channel.</p>
+<p>See also: child_process.exec() and child_process.fork()</p>
+<p>Synchronous Process Creation#<br />
+The child_process.spawnSync(), child_process.execSync(), and child_process.execFileSync() methods are synchronous and WILL block the Node.js event loop, pausing execution of any additional code until the spawned process exits.</p>
+<p>Blocking calls like these are mostly useful for simplifying general purpose scripting tasks and for simplifying the loading/processing of application configuration at startup.</p>
+<p>child_process.execFileSync(file[, args][, options])#</p>
+<p>Added in: v0.11.12<br />
+file <String> The name or path of the executable file to run<br />
+args <Array> List of string arguments<br />
+options <Object><br />
+cwd <String> Current working directory of the child process<br />
+input <String> | <Buffer> The value which will be passed as stdin to the spawned process<br />
+supplying this value will override stdio[0]<br />
+stdio <Array> Child&rsquo;s stdio configuration. (Default: &lsquo;pipe&rsquo;)<br />
+stderr by default will be output to the parent process&rsquo; stderr unless stdio is specified<br />
+env <Object> Environment key-value pairs<br />
+uid <Number> Sets the user identity of the process. (See setuid(2).)<br />
+gid <Number> Sets the group identity of the process. (See setgid(2).)<br />
+timeout <Number> In milliseconds the maximum amount of time the process is allowed to run. (Default: undefined)<br />
+killSignal <String> The signal value to be used when the spawned process will be killed. (Default: &lsquo;SIGTERM&rsquo;)<br />
+maxBuffer <Number> largest amount of data (in bytes) allowed on stdout or stderr - if exceeded child process is killed<br />
+encoding <String> The encoding used for all stdio inputs and outputs. (Default: &lsquo;buffer&rsquo;)<br />
+return: <Buffer> | <String> The stdout from the command<br />
+The child_process.execFileSync() method is generally identical to child_process.execFile() with the exception that the method will not return until the child process has fully closed. When a timeout has been encountered and killSignal is sent, the method won&rsquo;t return until the process has completely exited. Note that if the child process intercepts and handles the SIGTERM signal and does not exit, the parent process will still wait until the child process has exited.</p>
+<p>If the process times out, or has a non-zero exit code, this method will throw. The Error object will contain the entire result from child_process.spawnSync()</p>
+<p>child_process.execSync(command[, options])#</p>
+<p>Added in: v0.11.12<br />
+command <String> The command to run<br />
+options <Object><br />
+cwd <String> Current working directory of the child process<br />
+input <String> | <Buffer> The value which will be passed as stdin to the spawned process<br />
+supplying this value will override stdio[0]<br />
+stdio <Array> Child&rsquo;s stdio configuration. (Default: &lsquo;pipe&rsquo;)<br />
+stderr by default will be output to the parent process&rsquo; stderr unless stdio is specified<br />
+env <Object> Environment key-value pairs<br />
+shell <String> Shell to execute the command with (Default: &lsquo;/bin/sh&rsquo; on UNIX, &lsquo;cmd.exe&rsquo; on Windows, The shell should understand the -c switch on UNIX or /s /c on Windows. On Windows, command line parsing should be compatible with cmd.exe.)<br />
+uid <Number> Sets the user identity of the process. (See setuid(2).)<br />
+gid <Number> Sets the group identity of the process. (See setgid(2).)<br />
+timeout <Number> In milliseconds the maximum amount of time the process is allowed to run. (Default: undefined)<br />
+killSignal <String> The signal value to be used when the spawned process will be killed. (Default: &lsquo;SIGTERM&rsquo;)<br />
+maxBuffer <Number> largest amount of data (in bytes) allowed on stdout or stderr - if exceeded child process is killed<br />
+encoding <String> The encoding used for all stdio inputs and outputs. (Default: &lsquo;buffer&rsquo;)<br />
+return: <Buffer> | <String> The stdout from the command<br />
+The child_process.execSync() method is generally identical to child_process.exec() with the exception that the method will not return until the child process has fully closed. When a timeout has been encountered and killSignal is sent, the method won&rsquo;t return until the process has completely exited. Note that if the child process intercepts and handles the SIGTERM signal and doesn&rsquo;t exit, the parent process will wait until the child process has exited.</p>
+<p>If the process times out, or has a non-zero exit code, this method will throw. The Error object will contain the entire result from child_process.spawnSync()</p>
+<p>child_process.spawnSync(command[, args][, options])#</p>
+<p>Added in: v0.11.12<br />
+command <String> The command to run<br />
+args <Array> List of string arguments<br />
+options <Object><br />
+cwd <String> Current working directory of the child process<br />
+input <String> | <Buffer> The value which will be passed as stdin to the spawned process<br />
+supplying this value will override stdio[0]<br />
+stdio <Array> Child&rsquo;s stdio configuration.<br />
+env <Object> Environment key-value pairs<br />
+uid <Number> Sets the user identity of the process. (See setuid(2).)<br />
+gid <Number> Sets the group identity of the process. (See setgid(2).)<br />
+timeout <Number> In milliseconds the maximum amount of time the process is allowed to run. (Default: undefined)<br />
+killSignal <String> The signal value to be used when the spawned process will be killed. (Default: &lsquo;SIGTERM&rsquo;)<br />
+maxBuffer <Number> largest amount of data (in bytes) allowed on stdout or stderr - if exceeded child process is killed<br />
+encoding <String> The encoding used for all stdio inputs and outputs. (Default: &lsquo;buffer&rsquo;)<br />
+shell <Boolean> | <String> If true, runs command inside of a shell. Uses &lsquo;/bin/sh&rsquo; on UNIX, and &lsquo;cmd.exe&rsquo; on Windows. A different shell can be specified as a string. The shell should understand the -c switch on UNIX, or /s /c on Windows. Defaults to false (no shell).<br />
+return: <Object><br />
+pid <Number> Pid of the child process<br />
+output <Array> Array of results from stdio output<br />
+stdout <Buffer> | <String> The contents of output[1]<br />
+stderr <Buffer> | <String> The contents of output[2]<br />
+status <Number> The exit code of the child process<br />
+signal <String> The signal used to kill the child process<br />
+error <Error> The error object if the child process failed or timed out<br />
+The child_process.spawnSync() method is generally identical to child_process.spawn() with the exception that the function will not return until the child process has fully closed. When a timeout has been encountered and killSignal is sent, the method won&rsquo;t return until the process has completely exited. Note that if the process intercepts and handles the SIGTERM signal and doesn&rsquo;t exit, the parent process will wait until the child process has exited.</p>
+<p><a href="#title">go to title</a><br />
+<a href="#title2">go to title2</a><br />
+<a href="#title3">go to title3</a></p></article></body></html>
