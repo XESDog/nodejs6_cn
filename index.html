@@ -64,17 +64,26 @@
     <article id="post-Http" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Http/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Http/">Http</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Http"><a href="#title-Http" class="headerlink" title="title:Http"></a>title:Http</h2><p>#Http<br>使用Http,必须通过<code>require(&#39;http)</code>。</p>
+        <p>#Http<br>使用Http,必须通过<code>require(&#39;http)</code>。</p>
 <p>Http接口在Node.js中被设计成支持多功能协议,这些协议是以前很难以使用的。<br>特别是大的消息数据,该接口非常小心,从不缓冲请求和恢复————用户能够处理数据流。</p>
 <p>Http头信息通过对象的形式呈现如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123; &apos;content-length&apos;: &apos;123&apos;,</div><div class="line">  &apos;content-type&apos;: &apos;text/plain&apos;,</div><div class="line">  &apos;connection&apos;: &apos;keep-alive&apos;,</div><div class="line">  &apos;host&apos;: &apos;mysite.com&apos;,</div><div class="line">  &apos;accept&apos;: &apos;*/*&apos; &#125;</div></pre></td></tr></table></figure>
@@ -266,17 +275,26 @@
     <article id="post-Timers" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Timers/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Timers/">Timers</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Timers"><a href="#title-Timers" class="headerlink" title="title:Timers"></a>title:Timers</h2><p>#Timers</p>
+        <p>#Timers</p>
 <p>所有timer的方法都是全局的。你不必使用<code>require()</code>就能使用它们。</p>
 <p>##clearImmediate(immediateObject)<br>停止一个<code>immediateObject</code>,该对象通过<code>setImmediate</code>创建。</p>
 <p>##clearInterval(intervalObject)<br>停止一个<code>intervalObject</code>,该对象通过<code>setInterval</code>创建。</p>
@@ -307,17 +325,26 @@
     <article id="post-Buffer" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Buffer/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Buffer/">Buffer</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Buffer"><a href="#title-Buffer" class="headerlink" title="title:Buffer"></a>title:Buffer</h2><p>#Buffer</p>
+        <p>#Buffer</p>
 <h2 id="Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe"><a href="#Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe" class="headerlink" title="Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()"></a>Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()</h2><p>nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：</p>
 <ul>
 <li><p>第一个参数传递number(e.g. <code>new Buffer(10)</code>),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,<br>必须手动使用buf.fill(0)或直接写Buffer来完成初始化。虽然这么做是希望能够提升效率,但是经验告诉我们,我们必须明确<br>我们需要的是一个快而未初始化的创建方式,还是慢而安全的创建方式。</p>
@@ -401,17 +428,26 @@
     <article id="post-ChildProcesses" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/ChildProcesses/">Child Process</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Child-Process"><a href="#title-Child-Process" class="headerlink" title="title:Child Process"></a>title:Child Process</h2><p>#Child Process</p>
+        <p>#Child Process</p>
 <p>[TOC]</p>
 <p><code>child_process</code>能够以一种近似但不同于<a href="http://man7.org/linux/man-pages/man3/popen.3.html" target="_blank" rel="external">popen(3)</a>的方式来生成子进程,<br>该功能主要由<code>child_process.spawn()</code>提供。</p>
 <p>译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.<br>管道定义为单向的,参数type表明是读还是写,不能两者兼有。响应的产生的流也是只读或者只写。</p>
@@ -553,17 +589,26 @@
     <article id="post-Console" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Console/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Console/">Console</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Console"><a href="#title-Console" class="headerlink" title="title:Console"></a>title:Console</h2><p>#Console<br><code>console</code>模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。</p>
+        <p>#Console<br><code>console</code>模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。</p>
 <p>该模块导出两个特殊的组件:</p>
 <ul>
 <li><p><code>Console</code>类,有这些方法,<code>console.log()</code>,<code>console.error()</code>,<code>console.warn()</code>能够用来写出任何的Node.js流</p>
@@ -606,17 +651,26 @@
     <article id="post-Debugger" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Debugger/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Debugger/">Debugger</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Debugger"><a href="#title-Debugger" class="headerlink" title="title:Debugger"></a>title:Debugger</h2><p>#Debugger</p>
+        <p>#Debugger</p>
 
       
     </div>
@@ -634,17 +688,26 @@
     <article id="post-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Cluster/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Cluster/">Cluster</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Cluster"><a href="#title-Cluster" class="headerlink" title="title:Cluster"></a>title:Cluster</h2><p>#Cluster</p>
+        <p>#Cluster</p>
 <p>跑在一个独立线程的Node.js单例。在用户想要通过执行一批Node.js进程控制加载的时候,提升多核系统性能。</p>
 <p>cluster模块允许你简单的创建共享服务端口的子进程。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">const cluster = require(&apos;cluster&apos;);</div><div class="line">const http = require(&apos;http&apos;);</div><div class="line">const numCPUs = require(&apos;os&apos;).cpus().length;</div><div class="line"></div><div class="line">if (cluster.isMaster) &#123;</div><div class="line">  // Fork workers.</div><div class="line">  for (var i = 0; i &lt; numCPUs; i++) &#123;</div><div class="line">    cluster.fork();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  cluster.on(&apos;exit&apos;, (worker, code, signal) =&gt; &#123;</div><div class="line">    console.log(`worker $&#123;worker.process.pid&#125; died`);</div><div class="line">  &#125;);</div><div class="line">&#125; else &#123;</div><div class="line">  // Workers can share any TCP connection</div><div class="line">  // In this case it is an HTTP server</div><div class="line">  http.createServer((req, res) =&gt; &#123;</div><div class="line">    res.writeHead(200);</div><div class="line">    res.end(&apos;hello world\n&apos;);</div><div class="line">  &#125;).listen(8000);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -665,17 +728,26 @@
     <article id="post-OS" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/OS/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/OS/">OS</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-OS"><a href="#title-OS" class="headerlink" title="title:OS"></a>title:OS</h2><p>#OS</p>
+        <p>#OS</p>
 <p>提供一些跟操作系统相关的方法。</p>
 <p>使用require(‘os’)来访问该模块</p>
 <p>以下是我机器截图,供参考<br><img src="../images/os_1.jpg" alt=""><br><img src="../images/os_2.jpg" alt=""><br><img src="../images/os_3.jpg" alt=""></p>
@@ -720,17 +792,26 @@
     <article id="post-Modules" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Modules/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Modules/">Modules</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Modules"><a href="#title-Modules" class="headerlink" title="title:Modules"></a>title:Modules</h2><p>#Modules</p>
+        <p>#Modules</p>
 <p>Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,<code>foo.js</code>在同样的文件夹加载<code>circle.js</code>模块。</p>
 <p><code>foo.js</code>的内容:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const circle = require(&apos;./circle.js&apos;);</div><div class="line">console.log( `The area of a circle of radius 4 is $&#123;circle.area(4)&#125;`);</div></pre></td></tr></table></figure></p>
 <p><code>circle.js</code>的内容:</p>
@@ -902,17 +983,26 @@
     <article id="post-Process" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Process/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/nodejs6_cn/2016/06/29/Process/">process</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-process"><a href="#title-process" class="headerlink" title="title:process"></a>title:process</h2><p>#process</p>
+        <p>#process</p>
 <p>##process.nextTick(callback[,arg][,…])</p>
 <ul>
 <li>callback \<function></function></li>
@@ -979,23 +1069,23 @@
       <ul>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Http/">Http</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">Timers</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">Buffer</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">Child Process</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Console/">Console</a>
           </li>
         
       </ul>

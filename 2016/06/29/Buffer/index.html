@@ -3,27 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Nodejs6_API_CN</title>
+  <title>Buffer | Nodejs6_API_CN</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title:Buffer#Buffer
+  <meta name="description" content="#Buffer
 Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
 
-第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,必须手动使">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:title" content="Buffer">
 <meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Buffer/index.html">
 <meta property="og:site_name" content="Nodejs6_API_CN">
-<meta property="og:description" content="title:Buffer#Buffer
+<meta property="og:description" content="#Buffer
 Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
 
-第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
-<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,必须手动使">
+<meta property="og:updated_time" content="2016-06-29T03:15:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nodejs6_API_CN">
-<meta name="twitter:description" content="title:Buffer#Buffer
+<meta name="twitter:title" content="Buffer">
+<meta name="twitter:description" content="#Buffer
 Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
 
-第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,必须手动使">
   
     <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
   
@@ -75,17 +75,26 @@ Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实
         <section id="main"><article id="post-Buffer" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/nodejs6_cn/2016/06/29/Buffer/" class="article-date">
-  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+  <time datetime="2016-06-29T03:15:48.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Buffer
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-Buffer"><a href="#title-Buffer" class="headerlink" title="title:Buffer"></a>title:Buffer</h2><p>#Buffer</p>
+        <p>#Buffer</p>
 <h2 id="Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe"><a href="#Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe" class="headerlink" title="Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()"></a>Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()</h2><p>nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：</p>
 <ul>
 <li><p>第一个参数传递number(e.g. <code>new Buffer(10)</code>),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,<br>必须手动使用buf.fill(0)或直接写Buffer来完成初始化。虽然这么做是希望能够提升效率,但是经验告诉我们,我们必须明确<br>我们需要的是一个快而未初始化的创建方式,还是慢而安全的创建方式。</p>
@@ -169,7 +178,7 @@ Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          (no title)
+          Timers
         
       </div>
     </a>
@@ -177,7 +186,7 @@ Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实
   
     <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title"></div>
+      <div class="article-nav-title">Child Process</div>
     </a>
   
 </nav>
@@ -214,23 +223,23 @@ Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实
       <ul>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Http/">Http</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">Timers</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">Buffer</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">Child Process</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+            <a href="/nodejs6_cn/2016/06/29/Console/">Console</a>
           </li>
         
       </ul>
