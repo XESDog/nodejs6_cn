@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:process#process
+##process.nextTick(callback[,arg][,…])
+
+callback \
+[,arg][,…] \ 调用callback时传递的额外参数
+
+process.nextTick()添加callback到 ‘next tick队列’。一旦当前时间循环转完,所有’next tick 队列’中的回调函数都将被执行。
+它不是setTim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Process/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:process#process
+##process.nextTick(callback[,arg][,…])
+
+callback \
+[,arg][,…] \ 调用callback时传递的额外参数
+
+process.nextTick()添加callback到 ‘next tick队列’。一旦当前时间循环转完,所有’next tick 队列’中的回调函数都将被执行。
+它不是setTim">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:process#process
+##process.nextTick(callback[,arg][,…])
+
+callback \
+[,arg][,…] \ 调用callback时传递的额外参数
+
+process.nextTick()添加callback到 ‘next tick队列’。一旦当前时间循环转完,所有’next tick 队列’中的回调函数都将被执行。
+它不是setTim">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Process" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Process/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-process"><a href="#title-process" class="headerlink" title="title:process"></a>title:process</h2><p>#process</p>
+<p>##process.nextTick(callback[,arg][,…])</p>
+<ul>
+<li>callback \<function></function></li>
+<li>[,arg][,…] \<any> 调用callback时传递的额外参数</any></li>
+</ul>
+<p><code>process.nextTick()</code>添加<code>callback</code>到 ‘next tick队列’。一旦当前时间循环转完,所有’next tick 队列’中的回调函数都将被执行。</p>
+<p>它不是setTimeout(fn,0)的简单别名,它更有效。在随后的时间循环中它运行在所有I/O事件之前(包括timer)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;start&apos;);</div><div class="line">process.nextTick(() =&gt; &#123;</div><div class="line">  console.log(&apos;nextTick callback&apos;);</div><div class="line">&#125;);</div><div class="line">console.log(&apos;scheduled&apos;);</div><div class="line">// Output:</div><div class="line">// start</div><div class="line">// scheduled</div><div class="line">// nextTick callback</div></pre></td></tr></table></figure>
+<p>在I/O发生之前,一个对象被创建之后,使用该API让用户来分配事件处理,是非常重要的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">function MyThing(options) &#123;</div><div class="line">  this.setupOptions(options);</div><div class="line"></div><div class="line">  process.nextTick(() =&gt; &#123;</div><div class="line">    this.startDoingStuff();</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">var thing = new MyThing();</div><div class="line">thing.getReadyForStuff();</div><div class="line"></div><div class="line">// thing.startDoingStuff() 将会在这里执行,而不是在创建对象的时候执行。</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>API将100%同步还是100%异步是非常重要的。看以下例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 警告!不要这么干!这是非常不安全的!</div><div class="line"></div><div class="line">function maybeSync(arg, cb) &#123;</div><div class="line">  if (arg) &#123;</div><div class="line">    cb();</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  fs.stat(&apos;file&apos;, cb);</div><div class="line">&#125;</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>该API在下面的情况下会非常危险:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">maybeSync(true, () =&gt; &#123;</div><div class="line">  foo();</div><div class="line">&#125;);</div><div class="line">bar();</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>你搞不清楚foo()和bar()哪个会先执行。</p>
+<p>下面的方法就好多了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">function definitelyAsync(arg, cb) &#123;</div><div class="line">  if (arg) &#123;</div><div class="line">    process.nextTick(cb);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  fs.stat(&apos;file&apos;, cb);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>注意:I/O被处理之前,每次通过时间循环都会将’next tick queue’中的方法全部执行完。结果,递归调用nextTick将在开始就阻断所有I/O,<br>像<code>while(true);</code>循环一样。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Process/" data-id="ciq0b4oqk0008fgfy1nnmt39m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/Modules/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/Readline/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:Modules#Modules
+Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,foo.js在同样的文件夹加载circle.js模块。
+foo.js的内容:12const circle = require(&amp;apos;./circle.js&amp;apos;);console.log( `The area of a circle of radiu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Modules/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:Modules#Modules
+Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,foo.js在同样的文件夹加载circle.js模块。
+foo.js的内容:12const circle = require(&amp;apos;./circle.js&amp;apos;);console.log( `The area of a circle of radiu">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:Modules#Modules
+Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,foo.js在同样的文件夹加载circle.js模块。
+foo.js的内容:12const circle = require(&amp;apos;./circle.js&amp;apos;);console.log( `The area of a circle of radiu">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Modules" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Modules/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Modules"><a href="#title-Modules" class="headerlink" title="title:Modules"></a>title:Modules</h2><p>#Modules</p>
+<p>Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,<code>foo.js</code>在同样的文件夹加载<code>circle.js</code>模块。</p>
+<p><code>foo.js</code>的内容:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const circle = require(&apos;./circle.js&apos;);</div><div class="line">console.log( `The area of a circle of radius 4 is $&#123;circle.area(4)&#125;`);</div></pre></td></tr></table></figure></p>
+<p><code>circle.js</code>的内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const PI = Math.PI;</div><div class="line">exports.area = (r) =&gt; PI * r * r;</div><div class="line">exports.circumference = (r) =&gt; 2 * PI * r;</div></pre></td></tr></table></figure>
+<p>模块<code>circle.js</code>导出了方法<code>area()</code>和<code>circumference()</code>。你能够将需要导出的方法和对象添加到专门的<code>exports</code>对象,以便能够在root层使用它们。</p>
+<p>本地模块以私有化的形式存在,因为Node.js将模块包装在一个方法中。上例中,变量<code>PI</code>是私有对象。</p>
+<p>如果你想在你的root模块中通过一次分配导出一个方法或者导出一个完整的对象而不是每次导出一个属性,你应该使用<code>module.exports</code>而不是<code>exports</code>。</p>
+<p>下面,<code>bar.js</code>使用了<code>square</code>模版,导出一个构造函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const square = require(&apos;./square.js&apos;);</div><div class="line">var mySquare = square(2);</div><div class="line">console.log(`The area of my square is $&#123;mySquare.area()&#125;`);</div></pre></td></tr></table></figure>
+<p><code>square</code>模版定义在<code>square.js</code>中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// assigning to exports will not modify module, must use module.exports</div><div class="line">module.exports = (width) =&gt; &#123;</div><div class="line">  return &#123;</div><div class="line">    area: () =&gt; width * width</div><div class="line">  &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>模版系统在<code>require(&quot;module&quot;)</code>模块中实现。</p>
+<p>##访问主模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.log(require.main===module)</div></pre></td></tr></table></figure>
+<p>以上代码写在<code>foo.js</code>文件中,通过<code>node foo.js</code>运行是<code>true</code>,但是,通过<code>require(&#39;./foo&#39;)</code>运行则为<code>false</code>。第一种运行方式表明foo.js是主模块,<br>第二种方式表明foo.js不是主模块。也就是说,通过这种方式你能够决定文件以哪种方式云行。</p>
+<p>因为<code>module</code>提供了一个<code>filename</code>属性,应用程序的入口可以通过<code>require.main.filename</code>获得。</p>
+<p>##附录:包管理窍门</p>
+<p>Node.js的<code>require()</code>被设计成能够支持大量合理的文件结构。<br>包管理工具,像<code>dpkg</code>,<code>rpm</code>,<code>npm</code>,都希望在不做任何修改的情况下通过Node.js构建本地模块。</p>
+<p>以下,我们给出了一个建议文件结构:</p>
+<p><code>/usr/lib/node/&lt;some-package&gt;/&lt;some-version&gt;</code></p>
+<p>一个包可以依赖另外一个包。为了安装<code>foo</code>包,你可能需要安装指定版本的<code>bar</code>包,<code>bar</code>包可能还有自己的依赖,在一些情况,依赖关系甚至会出现冲突,或者出现环形依赖。</p>
+<p>Node.js查阅了所有加载模块的<code>realpath</code>,并且找到它们之间的依赖关系,按照以下方法,非常简单的解决了以上问题。</p>
+<ul>
+<li><code>/usr/lib/mode/foo/1.2.3</code></li>
+<li><code>/usr/lib/mode/bar/4.3.2</code> foo所依赖</li>
+<li><code>/usr/lib/mode/foo/1.2.3/node_modules/bar</code> 连接到<code>/usr/lib/node/bar/4.3.2</code></li>
+<li><code>/usr/lib/mode/bar/4.3.2/node_modules/*</code> 连接到<code>bar</code>所依赖的包</li>
+</ul>
+<p>由此,如果你遭遇到环形依赖,或者依赖冲突,模块都能够获得一个能够使用的依赖版本。</p>
+<p>当<code>foo</code>包中代码执行<code>require(&#39;bar&#39;)</code>,你将连接到<code>/usr/lib/node/foo/1.2.3/node_modules/bar</code>。这是,当<code>bar</code>包中代码<br>执行<code>require(&#39;quux&#39;)</code>,它将连接到<code>/usr/lib/node/bar/4.3.2/node_modules/quux</code>获取版本。</p>
+<p>此外,为了使得查找模块更加迅速,我们将模块放置在<code>/usr/lib/node_modules/&lt;name&gt;/&lt;version&gt;</code>,快过直接放置在<code>/usr/lib/node</code>。</p>
+<p>为了使得模块在Node.js REPL中可用,我们通常将<code>/usr/lib/node_modules</code>文件夹添加到环境变量<code>$NODE_PATH</code>中。所有<code>node_modules</code>查阅都是相对的,<br>如果基于文件的实际路径通过<code>require()</code>来查找,那么包可以放置在任何位置。</p>
+<p>##All Together</p>
+<p>想要获取待加载模块的精确文件名,需要等<code>require()</code>执行之后,通过<code>require.resolve()</code>方法获取。</p>
+<p>以下是<code>require.resolve()</code>方法执行的伪代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">require(X) from module at path Y</div><div class="line">从Y文件夹中请求模块X</div><div class="line"></div><div class="line">1. If X is a core module, 如果X是核心模块</div><div class="line">   a. return the core module   返回核心模块</div><div class="line">   b. STOP</div><div class="line">2. If X begins with &apos;./&apos; or &apos;/&apos; or &apos;../&apos;    如果X由&apos;./&apos; or &apos;/&apos; or &apos;../&apos;开始</div><div class="line">   a. LOAD_AS_FILE(Y + X)   通过Y+X加载文件,详细参考下面针对该方法的描述</div><div class="line">   b. LOAD_AS_DIRECTORY(Y + X)  通过Y+X加载文件夹,详细参考下面针对该方法的描述</div><div class="line">3. LOAD_NODE_MODULES(X, dirname(Y))</div><div class="line">4. THROW &quot;not found&quot; 抛出异常</div><div class="line"></div><div class="line">LOAD_AS_FILE(X)</div><div class="line">// X是文件,像js文件一样加载,stop</div><div class="line">1. If X is a file, load X as JavaScript text.  STOP</div><div class="line">// X.js是文件,像加载js文件一样加载,stop</div><div class="line">2. If X.js is a file, load X.js as JavaScript text.  STOP</div><div class="line">//X.json是一个文件,将X.json解析成一个js对象,stop</div><div class="line">3. If X.json is a file, parse X.json to a JavaScript Object.  STOP</div><div class="line">//X.node是一个文件,以二进制的形式加载X.node,stop</div><div class="line">4. If X.node is a file, load X.node as binary addon.  STOP</div><div class="line"></div><div class="line">LOAD_AS_DIRECTORY(X)</div><div class="line"></div><div class="line">// 如果X/package.json是一个文件</div><div class="line">1. If X/package.json is a file,</div><div class="line">    //解析X/package.json,查找&quot;主&quot;域</div><div class="line">   a. Parse X/package.json, and look for &quot;main&quot; field.</div><div class="line">   b. let M = X + (json main field)</div><div class="line">   c. LOAD_AS_FILE(M)</div><div class="line">2. If X/index.js is a file, load X/index.js as JavaScript text.  STOP</div><div class="line">3. If X/index.json is a file, parse X/index.json to a JavaScript object. STOP</div><div class="line">4. If X/index.node is a file, load X/index.node as binary addon.  STOP</div><div class="line"></div><div class="line">LOAD_NODE_MODULES(X, START)</div><div class="line">1. let DIRS=NODE_MODULES_PATHS(START)</div><div class="line">2. for each DIR in DIRS:</div><div class="line">   a. LOAD_AS_FILE(DIR/X)</div><div class="line">   b. LOAD_AS_DIRECTORY(DIR/X)</div><div class="line"></div><div class="line">NODE_MODULES_PATHS(START)</div><div class="line">1. let PARTS = path split(START)</div><div class="line">2. let I = count of PARTS - 1</div><div class="line">3. let DIRS = []</div><div class="line">4. while I &gt;= 0,</div><div class="line">   a. if PARTS[I] = &quot;node_modules&quot; CONTINUE</div><div class="line">   c. DIR = path join(PARTS[0 .. I] + &quot;node_modules&quot;)</div><div class="line">   b. DIRS = DIRS + DIR</div><div class="line">   c. let I = I - 1</div><div class="line">5. return DIRS</div></pre></td></tr></table></figure>
+<p>##缓存</p>
+<p>在第一次加载之后模块就被缓存了,也就是说,只要加载过一次,以后的每次加载都能够快速且精准的被找到。</p>
+<p>多次执行<code>require(&#39;foo&#39;)</code>,不会导致模块被多次执行。这是非常重要的特征。</p>
+<p>//不会翻译<br>With it, “partially done” objects can be returned, thus allowing transitive dependencies to be loaded even when they would cause cycles.</p>
+<p>如果你想多次执行同一个模块,将它导出为一个方法,然后多次执行该方法。</p>
+<p>##模块缓存注意事项</p>
+<p>模块缓存是基于解析出来的文件名,由于模块能够根据存放的位置不同导致最终解析成不同的文件名,因此,如果你在不同的位置调用<code>require(&#39;foo&#39;)</code>,不能够保证总是能够获取同样的对象。</p>
+<p>另外,对于不区分大小写的文件系统或者操作系统,不同的文件名最后对于的可能是同一个文件,但是,缓存依然会将他们当成不同的模块多次加载。<br>比如:<code>require(&#39;./foo&#39;)</code>和<code>require(./FOO)</code>返回两个不同的对象,而不管<code>./foo</code>和<code>./FOO</code>实际上是同一个文件。</p>
+<p>##核心模块<br>Node.js有好几个模块编译成二进制数据。这些模块在本文档的其他地方有更详尽的描述。</p>
+<p>核心模块被定义在Node.js的源文件下面的<code>lib/</code>文件夹下。</p>
+<p>核心模块总是优先加载,比如,request(‘http’)总是返回HTTP模块,即使有一个文件跟这个名字一样。</p>
+<p>##环</p>
+<p>当<code>require()</code>请求形成了一个环,有可能会有模块最终未被执行。<br>比如以下这种情况:</p>
+<p><code>a.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;a starting&apos;);</div><div class="line">exports.done = false;</div><div class="line">const b = require(&apos;./b.js&apos;);</div><div class="line">console.log(&apos;in a, b.done = %j&apos;, b.done);</div><div class="line">exports.done = true;</div><div class="line">console.log(&apos;a done&apos;);</div></pre></td></tr></table></figure>
+<p><code>b.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;b starting&apos;);</div><div class="line">exports.done = false;</div><div class="line">const a = require(&apos;./a.js&apos;);</div><div class="line">console.log(&apos;in b, a.done = %j&apos;, a.done);</div><div class="line">exports.done = true;</div><div class="line">console.log(&apos;b done&apos;);</div></pre></td></tr></table></figure>
+<p><code>main.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;main starting&apos;);</div><div class="line">const a = require(&apos;./a.js&apos;);</div><div class="line">const b = require(&apos;./b.js&apos;);</div><div class="line">console.log(&apos;in main, a.done=%j, b.done=%j&apos;, a.done, b.done);</div></pre></td></tr></table></figure>
+<p>当<code>main.js</code>加载<code>a.js</code>,<code>a.js</code>转而加载<code>b.js</code>,此时,<code>b.js</code>又试图加载<code>a.js</code>,为了避免形成无限循环,将一个未完成copy的<code>a.js</code>返回给<code>b.js</code>模块。<br>待<code>b.js</code>完成加载之后,再将<code>b.js</code>导出并提供给<code>a.js</code>模块。</p>
+<p>这时<code>main.js</code>加载这两个模块,都能够完成,输出结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ node main.js</div><div class="line">main starting</div><div class="line">a starting</div><div class="line">b starting</div><div class="line">in b, a.done = false</div><div class="line">b done</div><div class="line">in a, b.done = true</div><div class="line">a done</div><div class="line">in main, a.done=true, b.done=true</div></pre></td></tr></table></figure>
+<p>如果你的项目中出现了环形依赖,请按照上面的来。</p>
+<p>##文件模块</p>
+<p>如果文件未被找到,Node.js将试图在文件名后面添加扩展名来查找,比如:<code>.js</code>,<code>.json</code>,<code>.node</code>。</p>
+<p><code>.js</code>文件被解释为js文件,<code>.json</code>文件被解释成Json文件,<code>.node</code>文件被解释成通过<code>dlopen</code>编译过的文件。</p>
+<p>模块请求前缀为<code>/</code>是绝对路径,比如:<code>require(&#39;/home/marco/foo.js&#39;)</code>将加载文件<code>/home/marco/foo.js</code>。</p>
+<p>模块请求前缀为<code>./</code>是相对路径,比如,<code>circle.js</code>必须和<code>foo.js</code>在同一个文件夹,才能够在<code>foo.js</code>中通过<code>require(&#39;./circle.js&#39;)</code>找到。</p>
+<p>如果没有<code>/</code>,<code>./</code>,<code>../</code>,那么该木块必须是核心模块,或者在<code>node_modules</code>文件夹中。</p>
+<p>如果通过以上方法都没有找到对应的文件,<code>require()</code>将抛出一个Error,且<code>code</code>属性被设置为<code>MODULE_NOT_FOUND</code>。</p>
+<p>##文件夹模块</p>
+<p>我非常方便的组织程序和库到自己的文件夹中,并且为库提供一个独立的入口。这里有3种方法能够将文件夹传递到<code>require()</code>。</p>
+<p>第一个方法就是在跟目录创建<code>package.json</code>,用它指定一个<code>main</code>模块。想这样:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123; &quot;name&quot; : &quot;some-library&quot;,</div><div class="line">  &quot;main&quot; : &quot;./lib/some-library.js&quot; &#125;</div></pre></td></tr></table></figure>
+<p>如果该文件在 <code>./some-library</code> 文件夹,<code>require(&#39;./some-library&#39;)</code>将试图去加载<code>./some-library/lib/some-library.js</code>。</p>
+<p>package.json文件是Node.js意志的扩展。</p>
+<p>注意:如果通过<code>package.json</code>指定的<code>main</code>入口文件失效或者不能够解析。Node.js将抛出一个错误:</p>
+<p><code>Error:Cannot find module &#39;some-library&#39;</code></p>
+<p>如果没有package.json文件在文件夹中,Node.js会试着去加载文件夹下的<code>index.js</code>或<code>index.node</code>文件。<br>比如:如果没有package.json文件,require(‘./some-library’)将试图加载:</p>
+<ul>
+<li><code>./some-library/index.js</code></li>
+<li><code>./some-library/index.node</code></li>
+</ul>
+<p>##从node_modules文件夹加载<br>如果<code>require()</code>的不是本地模块,也没有<code>/</code>,<code>./</code>,<code>../</code>开始,Node.js会在模块的当前文件夹中创建一个<code>/node_modules</code>文件夹,<br>并从其他位置加载模块。Node不会在<code>node_modules</code>的文件夹后面追加<code>node_modules</code>文件夹。</p>
+<p>例:如果文件<code>/home/ry/projects/foo.js</code>执行<code>require(&#39;bar.js)</code>,Node.js将按照以下顺序查找本地文件。</p>
+<ul>
+<li><code>/home/ry/projects/node_modules/bar.js</code></li>
+<li><code>/home/ry/node_modules/bar.js</code></li>
+<li><code>/home/node_modules/bar.js</code></li>
+<li><code>/node_modules/bar.js</code></li>
+</ul>
+<p>允许程序本地化依赖,解决冲突问题。</p>
+<p>你能够require指定文件或者模块,它们和模块一起分布,分布方式为,模块名+路径后缀。比如,<code>require(&#39;example-module/path/to/file&#39;)</code><br>会解析和本地路径<code>example-module</code>相对的路径<code>path/to/file</code>。后缀路径遵循同样的模块语义规则。</p>
+<h2 id="从全局文件夹加载"><a href="#从全局文件夹加载" class="headerlink" title="从全局文件夹加载"></a>从全局文件夹加载</h2><p>如果<code>NODE_PATH</code>环境变量设置了,如果该模块在其他地方都没有找到,Node.js将从环境变量中定义的路径开始查找。</p>
+<h2 id="模块打包"><a href="#模块打包" class="headerlink" title="模块打包"></a>模块打包</h2><p>模块中的代码被执行之前,Node.js将用一个方法打包他们,看起来像下面这个样子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">(function (exports, require, module, __filename, __dirname) &#123;</div><div class="line">// Your module code actually lives in here</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Node.js干了以下的事情:</p>
+<ul>
+<li>保留模版顶级变量作用域,而不是使用全局对象</li>
+<li><p>提供全局变量,实际上是具体的模块,比如</p>
+<ul>
+<li><code>module</code>和<code>export</code>对象的实现者,能够从模块中导出值</li>
+<li><code>__filename</code>和<code>__dirname</code>变量,表示模块的绝对文件名和文件路径</li>
+</ul>
+</li>
+</ul>
+<h2 id="模块对象"><a href="#模块对象" class="headerlink" title="模块对象"></a>模块对象</h2><ul>
+<li>\<object></object></li>
+</ul>
+<p>每个模块,<code>module</code>变量表示当前模块。为了方便,<code>module.exports</code>也能够通过<code>exports</code>访问,<code>module</code>虽然在每个模块都有该对象,但是他并不是全局变量,<br>只是在每个模块中都对其做了设置。</p>
+<h3 id="module-children"><a href="#module-children" class="headerlink" title="module.children"></a>module.children</h3><ul>
+<li>\<array></array></li>
+</ul>
+<p>该模块所需的对象</p>
+<p>###module.exports</p>
+<ul>
+<li>\<object></object></li>
+</ul>
+<p><code>module.exports</code>对象通过模块系统创建。有时候它也是不被接受的。<br>你可能想将模块定义为一个类的对象,你可以这么做,用<code>module.exports</code>来导出你希望使用的对象。<br>注意,为<code>exports</code>分配你希望导出的对象会简单的重新绑定本地<code>export</code>变量,可能这并不是你想要的。</p>
+<p>比如,假设我们写了这样一个文件<code>a.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const EventEmitter = require(&apos;events&apos;);</div><div class="line"></div><div class="line">module.exports = new EventEmitter();</div><div class="line"></div><div class="line">// Do some work, and after some time emit</div><div class="line">// the &apos;ready&apos; event from the module itself.</div><div class="line">setTimeout(() =&gt; &#123;</div><div class="line">  module.exports.emit(&apos;ready&apos;);</div><div class="line">&#125;, 1000);</div></pre></td></tr></table></figure>
+<p>另外一个文件可以这么干</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const a = require(&apos;./a&apos;);</div><div class="line">a.on(&apos;ready&apos;, () =&gt; &#123;</div><div class="line">  console.log(&apos;module a is ready&apos;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>注意:分配<code>module.exports</code>会立即执行,但是像下面这么干,是不能得到你想要的结果滴。</p>
+<p>x.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">setTimeout(() =&gt; &#123;</div><div class="line">  module.exports = &#123; a: &apos;hello&apos; &#125;;</div><div class="line">&#125;, 0);</div></pre></td></tr></table></figure>
+<p>y.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const x = require(&apos;./x&apos;);</div><div class="line">console.log(x.a);</div></pre></td></tr></table></figure>
+<p>###导出化名</p>
+<p>在模块开始的时候,<code>exports</code>作为<code>module.exports</code>的引用是可用的。就想其他的变量一样,如果分配了一个新的值,它将不会再绑定到以前的值。</p>
+<p>请看下面的代码,简单的阐述了一下<code>require()</code>的实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function require(...) &#123;</div><div class="line">  // ...</div><div class="line">  ((module, exports) =&gt; &#123;</div><div class="line">    // Your module code here</div><div class="line">    exports = some_func;        // re-assigns exports, exports is no longer</div><div class="line">                                // a shortcut, and nothing is exported.</div><div class="line">    module.exports = some_func; // makes your module export 0</div><div class="line">  &#125;)(module, module.exports);</div><div class="line">  return module;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>exports</code>和<code>module.exports</code>的关系就像互相镜像,你可以忽略<code>exports</code>仅使用<code>module.exports</code>。</p>
+<p>###module.filename</p>
+<ul>
+<li>\<string></string></li>
+</ul>
+<p>模块的全名</p>
+<p>###module.id</p>
+<ul>
+<li>\<string><br>模块标识,通常这是模块的全名</string></li>
+</ul>
+<p>###module.loaded</p>
+<ul>
+<li>\<boolean></boolean></li>
+</ul>
+<p>是否模块完成了加载,还是正在加载中。</p>
+<p>###module.parent</p>
+<ul>
+<li>\<object> Module对象</object></li>
+</ul>
+<p>第一次请求该模块的对象</p>
+<h3 id="module-require-id"><a href="#module-require-id" class="headerlink" title="module.require(id)"></a>module.require(id)</h3><ul>
+<li>id\<string></string></li>
+<li>Return:\<object> <code>module.exports</code> 解析之后的模块</object></li>
+</ul>
+<p><code>module.require</code>提供了加载模块的方法,就像使用<code>require()</code>一样。</p>
+<p>注意,想要做到这点,你必须获取该<code>module</code>对象的引用,由于<code>require()</code>返回<code>module.exports</code>,<br>并且,<code>module</code>仅在指定模块代码中可用,它必须被明确的导出。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Modules/" data-id="ciq0b4oqi0007fgfyr5lh8ue1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/OS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/Process/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>

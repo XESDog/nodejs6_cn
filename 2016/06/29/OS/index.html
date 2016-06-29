@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:OS#OS
+提供一些跟操作系统相关的方法。
+使用require(‘os’)来访问该模块
+以下是我机器截图,供参考
+##os.EOL一个常量,操作系统行尾标识。
+##os.arch()返回操作系统CPU架构,如:x64,arm,ia32,返回process.arch的值。
+##os.cpus()返回一个数组对象,该对象包括了CPU的安装信息:model,speed,times
+例:12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/OS/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:OS#OS
+提供一些跟操作系统相关的方法。
+使用require(‘os’)来访问该模块
+以下是我机器截图,供参考
+##os.EOL一个常量,操作系统行尾标识。
+##os.arch()返回操作系统CPU架构,如:x64,arm,ia32,返回process.arch的值。
+##os.cpus()返回一个数组对象,该对象包括了CPU的安装信息:model,speed,times
+例:12">
+<meta property="og:image" content="http://xesjiaoyan.github.io/nodejs6_cn/../images/os_1.jpg">
+<meta property="og:image" content="http://xesjiaoyan.github.io/nodejs6_cn/../images/os_2.jpg">
+<meta property="og:image" content="http://xesjiaoyan.github.io/nodejs6_cn/../images/os_3.jpg">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:OS#OS
+提供一些跟操作系统相关的方法。
+使用require(‘os’)来访问该模块
+以下是我机器截图,供参考
+##os.EOL一个常量,操作系统行尾标识。
+##os.arch()返回操作系统CPU架构,如:x64,arm,ia32,返回process.arch的值。
+##os.cpus()返回一个数组对象,该对象包括了CPU的安装信息:model,speed,times
+例:12">
+<meta name="twitter:image" content="http://xesjiaoyan.github.io/nodejs6_cn/../images/os_1.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-OS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/OS/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-OS"><a href="#title-OS" class="headerlink" title="title:OS"></a>title:OS</h2><p>#OS</p>
+<p>提供一些跟操作系统相关的方法。</p>
+<p>使用require(‘os’)来访问该模块</p>
+<p>以下是我机器截图,供参考<br><img src="../images/os_1.jpg" alt=""><br><img src="../images/os_2.jpg" alt=""><br><img src="../images/os_3.jpg" alt=""></p>
+<p>##os.EOL<br>一个常量,操作系统行尾标识。</p>
+<p>##os.arch()<br>返回操作系统CPU架构,如:<code>x64</code>,<code>arm</code>,<code>ia32</code>,返回<code>process.arch</code>的值。</p>
+<p>##os.cpus()<br>返回一个数组对象,该对象包括了CPU的安装信息:model,speed,times</p>
+<p>例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">[ &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 252020,</div><div class="line">       nice: 0,</div><div class="line">       sys: 30340,</div><div class="line">       idle: 1070356870,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 306960,</div><div class="line">       nice: 0,</div><div class="line">       sys: 26980,</div><div class="line">       idle: 1071569080,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 248450,</div><div class="line">       nice: 0,</div><div class="line">       sys: 21750,</div><div class="line">       idle: 1070919370,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 256880,</div><div class="line">       nice: 0,</div><div class="line">       sys: 19430,</div><div class="line">       idle: 1070905480,</div><div class="line">       irq: 20 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 511580,</div><div class="line">       nice: 20,</div><div class="line">       sys: 40900,</div><div class="line">       idle: 1070842510,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 291660,</div><div class="line">       nice: 0,</div><div class="line">       sys: 34360,</div><div class="line">       idle: 1070888000,</div><div class="line">       irq: 10 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 308260,</div><div class="line">       nice: 0,</div><div class="line">       sys: 55410,</div><div class="line">       idle: 1071129970,</div><div class="line">       irq: 880 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 266450,</div><div class="line">       nice: 1480,</div><div class="line">       sys: 34920,</div><div class="line">       idle: 1072572010,</div><div class="line">       irq: 30 &#125; &#125; ]</div></pre></td></tr></table></figure></p>
+<p>##os.endianness()<br>参考<a href="http://es6.ruanyifeng.com/#docs/arraybuffer#字节序" target="_blank" rel="external">字节序</a></p>
+<p>##os.freemem()<br>返回空闲内存大小,单位byte</p>
+<p>##os.homedir()<br>返回当前用户的主文件夹位置</p>
+<p>##os.hostname()<br>返回操作系统的主机名称</p>
+<p>##os.loadavg()<br>返回1,5,15分钟的平均负载</p>
+<p>##os.networkInterface()<br>获取网络信息列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123; lo:</div><div class="line">   [ &#123; address: &apos;127.0.0.1&apos;,</div><div class="line">       netmask: &apos;255.0.0.0&apos;,</div><div class="line">       family: &apos;IPv4&apos;,</div><div class="line">       mac: &apos;00:00:00:00:00:00&apos;,</div><div class="line">       internal: true &#125;,</div><div class="line">     &#123; address: &apos;::1&apos;,</div><div class="line">       netmask: &apos;ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff&apos;,</div><div class="line">       family: &apos;IPv6&apos;,</div><div class="line">       mac: &apos;00:00:00:00:00:00&apos;,</div><div class="line">       internal: true &#125; ],</div><div class="line">  eth0:</div><div class="line">   [ &#123; address: &apos;192.168.1.108&apos;,</div><div class="line">       netmask: &apos;255.255.255.0&apos;,</div><div class="line">       family: &apos;IPv4&apos;,</div><div class="line">       mac: &apos;01:02:03:0a:0b:0c&apos;,</div><div class="line">       internal: false &#125;,</div><div class="line">     &#123; address: &apos;fe80::a00:27ff:fe4e:66a1&apos;,</div><div class="line">       netmask: &apos;ffff:ffff:ffff:ffff::&apos;,</div><div class="line">       family: &apos;IPv6&apos;,</div><div class="line">       mac: &apos;01:02:03:0a:0b:0c&apos;,</div><div class="line">       internal: false &#125; ] &#125;</div></pre></td></tr></table></figure>
+<p>##os.platform()<br>返回操作系统平台。值可能是darwin,freebsd,linux,sunos,win32,返回process.platform()的值</p>
+<p>##os.release()<br>返回操作系统的版本。</p>
+<p>##os.tmpdir()<br>返回操作系统默认临时文件夹</p>
+<p>##os.totalmem()<br>返回系统总的内存大小,单位byte</p>
+<p>##os.type()<br>返回操作系统名称,例:linux,darwin,windows_NT。</p>
+<p>##os.uptime()<br>返回系统运行时间,单位second(秒)。</p>
+<p>##os.userInfo([options])</p>
+<ul>
+<li><code>options</code> \<objecct><ul>
+<li><code>encoding</code> \<string></string></li>
+</ul>
+</objecct></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/OS/" data-id="ciq0b4oqh0006fgfyeucr6bkk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/Cluster/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/Modules/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>

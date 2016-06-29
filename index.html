@@ -61,34 +61,199 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-myfirst" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Http" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/nodejs6_cn/2016/06/29/myfirst/" class="article-date">
-  <time datetime="2016-06-29T03:08:35.000Z" itemprop="datePublished">2016-06-29</time>
+    <a href="/nodejs6_cn/2016/06/29/Http/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/nodejs6_cn/2016/06/29/myfirst/">this is my first</a>
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>this is my first hexo application.</p>
+        <hr>
+<h2 id="title-Http"><a href="#title-Http" class="headerlink" title="title:Http"></a>title:Http</h2><p>#Http<br>使用Http,必须通过<code>require(&#39;http)</code>。</p>
+<p>Http接口在Node.js中被设计成支持多功能协议,这些协议是以前很难以使用的。<br>特别是大的消息数据,该接口非常小心,从不缓冲请求和恢复————用户能够处理数据流。</p>
+<p>Http头信息通过对象的形式呈现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123; &apos;content-length&apos;: &apos;123&apos;,</div><div class="line">  &apos;content-type&apos;: &apos;text/plain&apos;,</div><div class="line">  &apos;connection&apos;: &apos;keep-alive&apos;,</div><div class="line">  &apos;host&apos;: &apos;mysite.com&apos;,</div><div class="line">  &apos;accept&apos;: &apos;*/*&apos; &#125;</div></pre></td></tr></table></figure>
+<p>key都是小写,value未被修改。(嘛意思?)</p>
+<p>为了能够尽可能多的支持跟多的特性,Node.js的Http API是非常底层的。仅仅处理流和信息解析。<br>它解析消息到headers和body中,但是,它不解析实际的headers或body。</p>
+<p>我们接收到的未处理的headers,被存在<code>rawHeaders</code>属性里面,格式<code>[key,value,key2,value2,...]</code>。<br>比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[ &apos;ConTent-Length&apos;, &apos;123456&apos;,</div><div class="line">  &apos;content-LENGTH&apos;, &apos;123&apos;,</div><div class="line">  &apos;content-type&apos;, &apos;text/plain&apos;,</div><div class="line">  &apos;CONNECTION&apos;, &apos;keep-alive&apos;,</div><div class="line">  &apos;Host&apos;, &apos;mysite.com&apos;,</div><div class="line">  &apos;accepT&apos;, &apos;*/*&apos; ]</div></pre></td></tr></table></figure>
+<p>##http.Agent类</p>
+<p>Http Agent被用来管理Http客户端请求的socket。</p>
+<p>默认情况下Http Agent使用Connection:keep-alive。如果socket处于空闲状态,socket就会被关闭。<br>意思是说,Node.js对象池在keep-alive情况下好处多多,即使负载的情况下,也不用开发者通过手动来关闭Http clients。</p>
+<p>如果你选择使用HTTP keepAlive,你能够创建一个Agent对象,并设置<code>flag</code>为<code>true</code>,该Agent对象保持未使用的socket在对象池中,<br>这将明确标记不保持Node.js进程运行。不管怎么样,当你不再使用它的时候明确的<code>destroy()</code>是非常好的选择,这时Socket将被关闭。</p>
+<p>当socket发送<code>close</code>事件或<code>agentRemove</code>事件Socket将从agent的对象池中移除。<br>也就是说,如果你想保持一个Http请求处于open状态一段时间,并且,不希望该请求待在对象池中,你可以按照下面的做法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http.get(options, (res) =&gt; &#123;</div><div class="line">  // Do stuff</div><div class="line">&#125;).on(&apos;socket&apos;, (socket) =&gt; &#123;</div><div class="line">  socket.emit(&apos;agentRemove&apos;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>或者,你可以选择设置<code>agent:false</code>来使对象不会被存储到对象池。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">http.get(&#123;</div><div class="line">  hostname: &apos;localhost&apos;,</div><div class="line">  port: 80,</div><div class="line">  path: &apos;/&apos;,</div><div class="line">  agent: false  // create a new agent just for this one request</div><div class="line">&#125;, (res) =&gt; &#123;</div><div class="line">  // Do stuff with response</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="new-Agent-options"><a href="#new-Agent-options" class="headerlink" title="new Agent([options])"></a>new Agent([options])</h3><ul>
+<li><p><code>options</code> \<object\> 设置agent的可配置选项:</object\></p>
+<ul>
+<li><code>keepAlive</code> \<boolean\> 保持socket在对象池中,以便未来被其他请求使用,Default=false。</boolean\></li>
+<li><code>keepAliveMsecs</code> \<integer\> 当使用HTTP KeepAlive,会经常发送TCP KeepAlive数据包来保持活动状态,Default=1000,仅在<code>keepAlive</code><br>设置为<code>true</code>时有用。</integer\></li>
+<li><code>maxSockets</code> \<number\> 每台主机允许socket的最大数量。Default=Infinity。</number\></li>
+<li><code>maxFressSockets</code> \<number\> 自由状态下打开的socket最大数量,仅<code>keepAlive</code>设置为<code>true</code>时有用。</number\></li>
+</ul>
+</li>
+</ul>
+<p>http.globalAgent用来设置http.request()的默认值。<br>想要配置他们,你必须创建你自己的http.Agent对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const http = require(&apos;http&apos;);</div><div class="line">var keepAliveAgent = new http.Agent(&#123; keepAlive: true &#125;);</div><div class="line">options.agent = keepAliveAgent;</div><div class="line">http.request(options, onResponseCallback);</div></pre></td></tr></table></figure>
+<h3 id="agent-createConnection-options-callback"><a href="#agent-createConnection-options-callback" class="headerlink" title="agent.createConnection(options[, callback])"></a>agent.createConnection(options[, callback])</h3><p>使用Http请求来生成一个socket/stream。</p>
+<p>默认情况下,该方法和<code>net.createConnection()</code>是一样的,通常考虑灵活性一般会使用Agent来重写该方法。</p>
+<p>一个socket/stream可以通过两种方法获得:通过该方法返回,或传递socket/stream给<code>callback</code>。</p>
+<p><code>callback</code>签名:<code>(err,stream)</code>。</p>
+<h3 id="agent-destroy"><a href="#agent-destroy" class="headerlink" title="agent.destroy()"></a>agent.destroy()</h3><p>通过agent销毁当前正使用的socket。</p>
+<p>通常不必这么做,如果你正在使用agent且KeepAlive=true,当你知道agent不再被使用时,你最好明确的关闭它。否则,服务器结束它们之前,socket将会挂起很长一段时间。</p>
+<h3 id="agent-freeSockets"><a href="#agent-freeSockets" class="headerlink" title="agent.freeSockets"></a>agent.freeSockets</h3><p>当HTTPKeepAlive被使用,一个包含socket数组的对象正等在Agent使用。不可修改。</p>
+<h3 id="agent-getName-options"><a href="#agent-getName-options" class="headerlink" title="agent.getName(options)"></a>agent.getName(options)</h3><p>获取一组<code>options</code>表示的唯一name,来决定是否连接被重用。在http agent中,返回<code>host:post:localAddress</code>。<br>在http agent中, CA,cert,ciphers,以及其他HTTPS/TLS-specific选项决定socket的可重用性。</p>
+<p>Options:</p>
+<ul>
+<li><code>host</code>: 请求到某服务器的域名和IP地址</li>
+<li><code>port</code>: 远程服务器的端口号</li>
+<li><code>localAddress</code>: 当请求发送的时候,绑定到网络连接的本地接口</li>
+</ul>
+<h3 id="agent-maxFreeSockets"><a href="#agent-maxFreeSockets" class="headerlink" title="agent.maxFreeSockets"></a>agent.maxFreeSockets</h3><p>默认设置为256,Agent支持HTTPKeepAlive时,将该值设置为自由状态下能够打开的最大值。</p>
+<h3 id="agent-maxSockets"><a href="#agent-maxSockets" class="headerlink" title="agent.maxSockets"></a>agent.maxSockets</h3><p>默认情况下为无限。能同时开多少socket取决于服务器。</p>
+<h3 id="agent-requests"><a href="#agent-requests" class="headerlink" title="agent.requests"></a>agent.requests</h3><p>一个还未被分配到socket的请求队列,不可修改。</p>
+<h3 id="agent-sockets"><a href="#agent-sockets" class="headerlink" title="agent.sockets"></a>agent.sockets</h3><p>一个当前被agent使用的socket数组,不可修改。</p>
+<h2 id="http-ClientRequest-类"><a href="#http-ClientRequest-类" class="headerlink" title="http.ClientRequest 类"></a>http.ClientRequest 类</h2><p>该对象通过<code>http.request()</code>内部创建并返回。它表示一个header已经进入队列了的正在进行的请求。<br>这个header依然可以通过 <code>setHeader(name,value)</code>,<code>getHeader(name)</code>,<code>removeHeader(name)</code>来做修改。<br>真是的header将沿着第一个数据块,或者链接关闭的时候发送。</p>
+<p>要想获取response,添加request对象的<code>response</code>侦听事件。<code>response</code>事件将在response头信息被收到的时候通过request对象发送。<br><code>response</code>事件被执行的<code>`时候带一个</code>http.IncomingMessage`类型的参数。</p>
+<p>在<code>response</code>事件期间,你可以为response对象添加侦听事件,特别是<code>data</code>事件。</p>
+<p>如果你侦听了<code>response</code>事件,你必须将response对象的数据完全取出。你可以通过 <code>response.read()</code>当触发<code>readable</code>事件的时候。<br>你还可以添加 <code>data</code>处理函数,也可以执行<code>.resume()</code>方法。知道所有数据都被取出,执行<code>end</code>事件。如果有数据没有读取完,将导致内存出错。</p>
+<p>注意:Node.js不会去检测是否Content-Length以及被发送的body的长度是否相等。</p>
+<p>###Event:’abort’<br><code>function (){}</code><br>当请求被客户端忽略的时候发送。该事件仅仅在第一次call abort()的时候发送。</p>
+<p>###Event:’checkExpectation’<br><code>function (request,response){}</code><br>每次发送一个请求,都有一个Expect头被收到。如果该事件未被侦听,服务端将自动回复一个417 Expectation Failed。</p>
+<p>注意,当这个事件被发送并被处理,<code>request</code>事件将不会发送。</p>
+<p>###Event:’connect’<br><code>function (response,socket,head){}</code><br>每次服务端回复一个请求的时候都会发送一个<code>CONNECT</code>事件。如果这个事件没有被侦听,客户接收<code>CONNECT</code>事件时,他们的连接就已经关闭了。</p>
+<p>以下例子告诉你如何侦听<code>connenct</code>事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">const http = require(&apos;http&apos;);</div><div class="line">const net = require(&apos;net&apos;);</div><div class="line">const url = require(&apos;url&apos;);</div><div class="line"></div><div class="line">// Create an HTTP tunneling proxy</div><div class="line">var proxy = http.createServer( (req, res) =&gt; &#123;</div><div class="line">  res.writeHead(200, &#123;&apos;Content-Type&apos;: &apos;text/plain&apos;&#125;);</div><div class="line">  res.end(&apos;okay&apos;);</div><div class="line">&#125;);</div><div class="line">proxy.on(&apos;connect&apos;, (req, cltSocket, head) =&gt; &#123;</div><div class="line">  // connect to an origin server</div><div class="line">  var srvUrl = url.parse(`http://$&#123;req.url&#125;`);</div><div class="line">  var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () =&gt; &#123;</div><div class="line">    cltSocket.write(&apos;HTTP/1.1 200 Connection Established\r\n&apos; +</div><div class="line">                    &apos;Proxy-agent: Node.js-Proxy\r\n&apos; +</div><div class="line">                    &apos;\r\n&apos;);</div><div class="line">    srvSocket.write(head);</div><div class="line">    srvSocket.pipe(cltSocket);</div><div class="line">    cltSocket.pipe(srvSocket);</div><div class="line">  &#125;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// now that proxy is running</div><div class="line">proxy.listen(1337, &apos;127.0.0.1&apos;, () =&gt; &#123;</div><div class="line"></div><div class="line">  // make a request to a tunneling proxy</div><div class="line">  var options = &#123;</div><div class="line">    port: 1337,</div><div class="line">    hostname: &apos;127.0.0.1&apos;,</div><div class="line">    method: &apos;CONNECT&apos;,</div><div class="line">    path: &apos;www.google.com:80&apos;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  var req = http.request(options);</div><div class="line">  req.end();</div><div class="line"></div><div class="line">  req.on(&apos;connect&apos;, (res, socket, head) =&gt; &#123;</div><div class="line">    console.log(&apos;got connected!&apos;);</div><div class="line"></div><div class="line">    // make a request over an HTTP tunnel</div><div class="line">    socket.write(&apos;GET / HTTP/1.1\r\n&apos; +</div><div class="line">                 &apos;Host: www.google.com:80\r\n&apos; +</div><div class="line">                 &apos;Connection: close\r\n&apos; +</div><div class="line">                 &apos;\r\n&apos;);</div><div class="line">    socket.on(&apos;data&apos;, (chunk) =&gt; &#123;</div><div class="line">      console.log(chunk.toString());</div><div class="line">    &#125;);</div><div class="line">    socket.on(&apos;end&apos;, () =&gt; &#123;</div><div class="line">      proxy.close();</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="Event-’continue’"><a href="#Event-’continue’" class="headerlink" title="Event:’continue’"></a>Event:’continue’</h3><p><code>function(){}</code><br>当服务端发送了一个’100 continue’Http回复的时候触发该事件,通常是因为request包含’Expect:100-continue’。这是一条客户端request body中的指令。</p>
+<h3 id="Event-’response’"><a href="#Event-’response’" class="headerlink" title="Event:’response’"></a>Event:’response’</h3><p><code>function (response){}</code><br>当回复被request收到的时候触发。该事件仅触发一次。<code>response</code>参数是一个<code>http.IncomingMessage</code>对象。</p>
+<h3 id="Event-’socket’"><a href="#Event-’socket’" class="headerlink" title="Event:’socket’"></a>Event:’socket’</h3><p><code>function (socket){}</code><br>一个socket分配给request之后触发。</p>
+<p>###Event:’upgrade’<br><code>function (response,socket,head){}</code><br>服务端有更新回复request的时候触发。如果该事件未被侦听,客户端收到更新事件头信息的时候连接就关闭了。</p>
+<p>下面代码展示如何侦听<code>upgrade</code>事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">const http = require(&apos;http&apos;);</div><div class="line"></div><div class="line">// Create an HTTP server</div><div class="line">var srv = http.createServer( (req, res) =&gt; &#123;</div><div class="line">  res.writeHead(200, &#123;&apos;Content-Type&apos;: &apos;text/plain&apos;&#125;);</div><div class="line">  res.end(&apos;okay&apos;);</div><div class="line">&#125;);</div><div class="line">srv.on(&apos;upgrade&apos;, (req, socket, head) =&gt; &#123;</div><div class="line">  socket.write(&apos;HTTP/1.1 101 Web Socket Protocol Handshake\r\n&apos; +</div><div class="line">               &apos;Upgrade: WebSocket\r\n&apos; +</div><div class="line">               &apos;Connection: Upgrade\r\n&apos; +</div><div class="line">               &apos;\r\n&apos;);</div><div class="line"></div><div class="line">  socket.pipe(socket); // echo back</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// now that server is running</div><div class="line">srv.listen(1337, &apos;127.0.0.1&apos;, () =&gt; &#123;</div><div class="line"></div><div class="line">  // make a request</div><div class="line">  var options = &#123;</div><div class="line">    port: 1337,</div><div class="line">    hostname: &apos;127.0.0.1&apos;,</div><div class="line">    headers: &#123;</div><div class="line">      &apos;Connection&apos;: &apos;Upgrade&apos;,</div><div class="line">      &apos;Upgrade&apos;: &apos;websocket&apos;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  var req = http.request(options);</div><div class="line">  req.end();</div><div class="line"></div><div class="line">  req.on(&apos;upgrade&apos;, (res, socket, upgradeHead) =&gt; &#123;</div><div class="line">    console.log(&apos;got upgraded!&apos;);</div><div class="line">    socket.end();</div><div class="line">    process.exit(0);</div><div class="line">  &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>###request.abort()<br>标记request终止中。执行该方法将导致response中剩下的数据被丢弃,并且,socket被销毁。</p>
+<p>###request.end([data][,encoding][,callback])<br>结束正在发送的请求,还有任何部分的数据没有发送,都将缓冲到stream中。如果request被分割成块了,将发送<code>0\r\n\r\n</code>来表示终结。</p>
+<p>如果<code>data</code>被指定,则相当于调用<code>response.write(data,encoding)</code>,再执行<code>request.end(callback)</code>。</p>
+<p>如果<code>callback</code>被指定,当request流被结束之后执行。</p>
+<p>###request.flushHeaders()<br>flush request头信息<br>考虑到效率问题,Node.js通常缓存request头信息,知道<code>request.end()</code>,或者写入第一块请求数据。它试图打包request头信息和数据到一个独立的TCP包中。</p>
+<p>通常你希望能够将数据保持在一个TCP请求的来回期间,可是一般在晚一些的时间,第一次数据才会被发送到。<code>request.flushHeaders()</code>让你避开了优化启动请求。</p>
+<p>###request.setNoDelay([noDelay])<br>当一个socket被分配到某个request并断开的时候,将执行<code>socket.setNoDelay()</code>。</p>
+<p>###request.setSocketKeepALive([enable][,initialDelay])<br>当一个socket被分配到某个request并断开的时候,将执行<code>socket.setKeepAlive()</code>。</p>
+<p>###request.setTimeout(timeout[,callback])<br>当一个socket被分配到某个request并断开的时候,将执行<code>socket.setTimeout()</code>。</p>
+<ul>
+<li><code>timeout</code>\<number\> 一个请求被超时xxx毫秒。</number\></li>
+<li><code>callback</code>\<function\> 当超时指定的时间到了之后执行的方法。相当于绑定<code>timeout</code>事件。</function\></li>
+</ul>
+<p>###request.write(chunk[,encoding][,callback])<br>发送数据,调用这个方法的时候,用户能够直接控制请求中的数据。也就是说,当创建这种请求的时候,用户可能正在使用<code>[Transter-Encoding,&#39;chunked&#39;]</code>头信息。</p>
+<p><code>chunk</code>参数必须是<code>Buffer</code>对象或者一个string。</p>
+<p><code>encoding</code>参数仅当<code>chunk</code>是string的情况下可选,默认为<code>utf8</code>。</p>
+<p><code>callback</code>参数可选,当大块数据被flush的时候调用。</p>
+<p>返回<code>reqeust</code>。</p>
+<p>##http.Server类</p>
+<p>继承至<code>net.Server</code>类,并且增加额外的事件:</p>
+<p>###Event:’checkContinue’<br><code>function(request,response){}</code><br>Expect:100-continue 被接收到的时候发送一个请求。如果没有侦听该事件,服务端将酌情自动回复100 Continue。</p>
+<p>如果客户端继续发送request body部分,那么处理事件的同时调用<code>response.writeContinue()</code>。如果客户端不继续发送request body部分,那么生成一个恰当的HTTP恢复(e.g.,400 Bad Request)</p>
+<p>注意:当该事件被触发并处理,<code>request</code>事件将不被触发。</p>
+<p>###Event:’clientError’<br><code>function(exception,socket){}</code></p>
+<p>如果客户端触发<code>error</code>事件,它将在这里被转发。侦听器负责关闭或销毁底层socket。比如,你希望通过更加优雅的方式关闭socket,给用户返回一个<code>400 Bad Request</code>,而不是突然关闭。</p>
+<p>默认,当遇到异常请求会立即销毁socket。</p>
+<p>错误来源于<code>socket</code>,是一个<code>net.Socket</code>对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const http = require(&apos;http&apos;);</div><div class="line"></div><div class="line">const server = http.createServer((req, res) =&gt; &#123;</div><div class="line">  res.end();</div><div class="line">&#125;);</div><div class="line">server.on(&apos;clientError&apos;, (err, socket) =&gt; &#123;</div><div class="line">  socket.end(&apos;HTTP/1.1 400 Bad Request\r\n\r\n&apos;);</div><div class="line">&#125;);</div><div class="line">server.listen(8000);</div></pre></td></tr></table></figure></p>
+<p>当<code>clientError</code>事件发生,回调函数中不会有<code>request</code>和<code>response</code>对象,因此所有Http响应请求,包括响应头和有效载荷,必须直接的写入<code>socket</code>对象。<br>必须确保按照正确的格式来响应信息。</p>
+<p>###Event:’close’</p>
+<p><code>function (){}</code></p>
+<p>当服务端<code>close</code>的时候触发。</p>
+<p>###Event:’connect’<br><code>function (request,socket,head){}</code></p>
+<p>一个客户端请求一个http <code>CONNECT</code>方法时发送,如果事件未被侦听,当客户端请求<code>CONNECT</code>方法的时候讲关闭该链接。</p>
+<ul>
+<li><code>request</code> http请求参数,就像在request事件中一样。</li>
+<li><code>socket</code>  客户端和服务端之间的socket链接。</li>
+<li><code>head</code>    Buffer的一个实例,数据流的第一个包,有可能为空。</li>
+</ul>
+<p>事件发送之后,request’s socket不会存在<code>data</code>事件处理,也就是说,你需要绑定处理函数,来处理通过socket发送到服务端的数据。</p>
+<p>###Event:’connection’<br><code>function (socket){}</code></p>
+<p>当新的TCP流被建立,通常用户不需要处理该事件。特别的,协议解析器绑定socket时采用的方式使得socket不会发送<code>readable</code>事件。socket也可以在<code>request.connection</code>中被访问。</p>
+<p>###Event:’request’<br><code>function (request,response){}</code></p>
+<p>每次请求都会触发事件。注意,每个链接都可能有大量的请求(在keep-alive链接的情况下)。<code>request</code>是<code>http.IncomingMessage</code>实例,<code>response</code>是<code>http.ServerResponse</code>实例。</p>
+<p>###Event:’upgrade’</p>
+<p><code>function (request,socket,head){}</code></p>
+<p>每次客户端请求一个http upgrade的时候触发。如果该事件未被侦听,客户端请求upgrade的时候就会被关闭。</p>
+<ul>
+<li><code>request</code> http request 参数,就像request事件中一样。</li>
+<li><code>socket</code>  服务端和客户端之间的socket链接</li>
+<li><code>head</code>    Buffer实例,upgrade流中的第一个包,可能为空。</li>
+</ul>
+<p>事件发送之后,request’s socket不会存在<code>data</code>事件处理,也就是说,你需要绑定处理函数,来处理通过socket发送到服务端的数据。</p>
+<p>###server.close([callback])<br>停止接受新的连接,查看 <code>net.Server.close()</code></p>
+<p>###server.listen(handle,[,callback])</p>
+<ul>
+<li><code>handle</code> \<object\></object\></li>
+<li><code>callback</code> \<function\></function\></li>
+</ul>
+<p><code>handle</code>能够被设置为一个<code>server</code>或<code>socket</code>对象。<br>这将导致server在指定的handle上接受一个连接,但是,它被假设该文件描述符或handle已经被绑定到一个端口或者域socket。</p>
+<p>侦听文件描述符在windows中不被支持。</p>
+<p>该方法是一步的,最后的参数callback将被作为一个侦听器添加到<code>listening</code>事件。see <code>net.Server.listen()</code>。</p>
+<p>返回 <code>server</code>。</p>
+<p>###server.listen(path,[,callback])<br>为给出的<code>path</code>上建立的连接启动一个UNIX socket server 侦听。</p>
+<p>该方法是一步的。最后的参数callback将被作为一个侦听器添加到<code>listenling</code>事件。see <code>net.Server.listen(path)</code>。</p>
+<p>###server.listen(port[,hostname][,backlog][,callback])<br>在指定的port,hostname上开始接收连接。如果hostname被忽略,且IPv6可用的时候,服务器将接受任何IPv6地址(<code>::</code>)的连接,<br>或者除开IPv4地址(<code>0.0.0.0</code>)的任何连接。port值如果为0,则随机分配一个端口号。</p>
+<p>侦听一个UNIX socket,提供一个filename而不是端口号和主机名。</p>
+<p>Backlog是排列等待连接的极限长度,实际长度由系统决定,在linux中则通过<code>tcp_max_syn_backlog</code>和<code>somaxconn</code>决定。<br>默认值是511(不是512)</p>
+<p>该方法是一步的,最后的参数callback将被作为一个侦听器添加到<code>listenling</code>事件。see <code>net.Server.listen(port)</code>。</p>
+<p>###server.listening<br>一个布尔值,表示是否服务器处于侦听状态。</p>
+<p>###server.maxHeadersCount<br>最大的传入header的数量,默认等于1000,如果设置为0,则被设置为无限。</p>
+<p>###server.setTimeout(msecs,callback)</p>
+<ul>
+<li><code>msecs</code> \<number></number></li>
+<li><code>callback</code> \<function></function></li>
+</ul>
+<p>设置socket超时的值。如果超时发生,通过server对象发送<code>timeout</code>事件,将socket作为参数传递。</p>
+<p>默认,server超时值为2分钟,如果曹氏,socket将被销毁。无论如何,如果你分配给server一个超时事件,那么你需要自己负责处理好超时事件。</p>
+<p>返回server。</p>
+<p>###server.timeout</p>
+<ul>
+<li>\<number> 默认=120000(2分钟)<br>socket超时未发生的时候,该值是不变的。</number></li>
+</ul>
+<p>注意,socket的逻辑是在连接的时候设置的。因此,修改这个值仅能影响新的server连接,不会对已经存在的连接产生任何影响。</p>
+<p>设置为0将在禁止任何种类的超时行为。</p>
+<p>##http.ServerResponse类</p>
+<p>该对象通过HTTP server在内部创建——不是通过用户创建的。它被当成第二个参数传递到<code>request</code>事件中。</p>
+<p>response实现但不继承Writable Stream接口。</p>
+<p>###Event:’close’<br><code>function(){}</code><br>表明底层连接被在response.end()被执行之前被中断,或者能够flush。</p>
+<p>###Event:’finish’<br><code>function(){}</code><br>response被发送的时候触发。更具体的说,该事件在最后一段head和body被移交到操作系统做网络传输的时候触发。<br>这并不表示客户端移交收到什么了。</p>
+<p>该事件之后,跟多的事件将通过response对象发送。</p>
+<p>###response.addTrailer(header)</p>
+<p>该方法为response添加HTTP头信息的尾部</p>
+<p>trailer在response中仅用作块编码。如果不是,它将默默的被丢弃。</p>
+<p>注意,trailer部分会跟header信息的其他值一起发送,你不必单独对他做什么。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">response.writeHead(200, &#123; &apos;Content-Type&apos;: &apos;text/plain&apos;,</div><div class="line">                          &apos;Trailer&apos;: &apos;Content-MD5&apos; &#125;);</div><div class="line">response.write(fileData);</div><div class="line">response.addTrailers(&#123;&apos;Content-MD5&apos;: &apos;7895bf4b8828b55ceaf47747b4bca667&apos;&#125;);</div><div class="line">response.end();</div></pre></td></tr></table></figure>
+<p>试图设置一个包含无效字符的header属性的名称或值返回<code>TypeError</code>异常。</p>
+<p>###response.end([data][,encoding][,callback])</p>
+<p>向服务端发出信号,response的header和body已经被发送。server应该考虑完成的情况<br>response.end()必须在每次回复的时候发送。</p>
+<p>if <code>data</code> 被指定,其实相当于先调用response.write(data,encoding),然后执行 response.end(callback)</p>
+<p>if  <code>callback</code>被指定,它将在response stream完成的时候执行。</p>
+<p>###response.finished</p>
+<p>布尔型,申明是否回复完成。开始是<code>false</code>。执行response.end()之后,值变为true。</p>
+<p>###response.getHeader(name)</p>
+<p>读取已经在排队当是还没有发送的header。注意,名字不区分大小写。该方法仅在header得到隐式刷新之后被调用。</p>
+<p>例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var contentType = response.getHeader(&apos;content-type&apos;);</div></pre></td></tr></table></figure>
+<p>###response.headersSent</p>
+<p>只读,布尔型,header被发送为true,否则为false</p>
+<p>###response.removeHeader(name)</p>
+<p>删除队列中隐式发送的header</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">response.removeHeader(&apos;Content-Encoding&apos;);</div></pre></td></tr></table></figure>
+<p>###response.sendDate</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/myfirst/" data-id="ciq0az6xe0000d8fyuwzxuqk3" class="article-share-link">Share</a>
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Http/" data-id="ciq0b4oqf0005fgfy6dc8i2gv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -98,42 +263,679 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Timers" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/nodejs6_cn/2016/06/29/hello-world/" class="article-date">
-  <time datetime="2016-06-29T02:19:42.000Z" itemprop="datePublished">2016-06-29</time>
+    <a href="/nodejs6_cn/2016/06/29/Timers/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/nodejs6_cn/2016/06/29/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <hr>
+<h2 id="title-Timers"><a href="#title-Timers" class="headerlink" title="title:Timers"></a>title:Timers</h2><p>#Timers</p>
+<p>所有timer的方法都是全局的。你不必使用<code>require()</code>就能使用它们。</p>
+<p>##clearImmediate(immediateObject)<br>停止一个<code>immediateObject</code>,该对象通过<code>setImmediate</code>创建。</p>
+<p>##clearInterval(intervalObject)<br>停止一个<code>intervalObject</code>,该对象通过<code>setInterval</code>创建。</p>
+<p>##clearTimeout(timeoutObject)<br>阻止一个<code>timeoutObject</code>,该对象通过<code>setTimeout</code>创建。</p>
+<p>##ref()<br>如果此前执行过unref(),此时ref()被调用来明确请求timer保持程序打开。如果已经执行了<code>ref</code>,再次执行不会有任何效果。</p>
+<p>##setImmediate(callback[,arg][,…])<br>I/O事件调用之前和timer通过setTimeout和setInterval触发之后,安排一个’立即’执行回调。<br>返回一个immediateObject,后期可能会被clearImmediate使用。额外的可选参数也可能被传递到回调函数中。</p>
+<p>立即执行的回调函数根据他们被创建的顺序,被存放在一个队列中。<br>在每个循环迭代中所有的回调队列都要被处理。<br>如果一个新的<code>immediate</code>在执行回调的时候被添加到队列,那么在下一个loop之前,它是不会被执行的。</p>
+<p>如果callback不是一个function,setImmediate()将立刻抛出异常。</p>
+<p>##setInterval(callback,delay[,arg][,…])</p>
+<p>安排一个每delay毫秒执行一次的callback。返回一个intervalObject,该对象在clearInterval()的时候回被使用。<br>额外的可选项会被添加到callback中。</p>
+<p>如果callback不是方法,setInterval()将立刻抛出异常。</p>
+<p>##setTimeout(callback,delay[,arg][,…])</p>
+<p>安排一个delay毫秒之后执行一次的callback。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/hello-world/" data-id="ciq098c86000067o5kix27unt" class="article-share-link">Share</a>
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Timers/" data-id="ciq0b4oqm000afgfy2t5rv9st" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Buffer/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Buffer"><a href="#title-Buffer" class="headerlink" title="title:Buffer"></a>title:Buffer</h2><p>#Buffer</p>
+<h2 id="Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe"><a href="#Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe" class="headerlink" title="Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()"></a>Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()</h2><p>nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：</p>
+<ul>
+<li><p>第一个参数传递number(e.g. <code>new Buffer(10)</code>),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,<br>必须手动使用buf.fill(0)或直接写Buffer来完成初始化。虽然这么做是希望能够提升效率,但是经验告诉我们,我们必须明确<br>我们需要的是一个快而未初始化的创建方式,还是慢而安全的创建方式。</p>
+</li>
+<li><p>第一个参数如果传递的是string,array或者Buffer,那么,将copy参数的数据到Buffer中。</p>
+</li>
+<li><p>如果传递一个ArrayBuffer对象,那么返回的Buffer对象将和该对象共享内存。</p>
+</li>
+</ul>
+<p>使用<code>new Buffer()</code>第一个参数有多种可能性,如果没有正确验证参数,以及不恰当分配Buffer内容,都将导致代码出现安全问题。<br>使用<code>Buffer</code>创建对象更加可靠也更不容易出错,所以,不赞成使用<code>new Buffer()</code>的方式创建Buffer对象,可以用<code>Buffer.from()</code>,<br><code>Buffer.alloc()</code>和<code>Buffer.allocUnsave()</code>方法代替。</p>
+<p>开发者可以将<code>new Buffer()</code>创建对象的方式使用一下方式代替。</p>
+<ul>
+<li><code>Buffer.from(array)</code>,返回一个新的Buffer对象,该对象复制<code>array</code>中的对象。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Buffer.from([1,2,3]);//&lt;Buffer 01 02 03&gt;</div><div class="line"></div><div class="line">//使用英文和字符,不能够正确输出</div><div class="line">Buffer.from([&apos;a&apos;,&apos;b&apos;,&apos;c&apos;]);//&lt;Buffer 00 00 00&gt;</div><div class="line">Buffer.from([&apos;你&apos;,&apos;好&apos;,&apos;啊&apos;]);//&lt;Buffer 00 00 00&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li><p><code>Buffer.from(arrayBuffer[, byteOffset [, length]])</code>,返回一个新的Buffer对象,该对象和提供的ArrayBuffer对象共享内存</p>
+</li>
+<li><p><code>Buffer.from(buffer)</code>,返回一个新的Buffer对象,该对象复制了参数<code>buffer</code>的内容。</p>
+</li>
+<li><p><code>Buffer.from(str[, encoding])</code>,返回一个新的Buffer对象,该对象复制了参数<code>str</code>。</p>
+</li>
+<li><p><code>Buffer.alloc(size[, fill[, encoding]])</code>,返回一个按照给定<code>size</code>填充之后的Buffer对象,该方法明显慢于<code>Buffer.allocUnsafe(size)</code>,<br>但是,通过该方法获取到的Buffer对象肯定不会保护敏感数据和旧数据。</p>
+</li>
+<li><p><code>Buffer.allocUnsafe(size)</code>and<code>Buffer.allocUnsafeSlow(size)</code>均能够返回一个指定<code>size</code>的Buffer对象,该Buffer对象<br>必须使用<code>buf.fill(0)</code>或手动写入数据来初始化。</p>
+</li>
+</ul>
+<p>使用<code>Buffer.allocUnsafe(size)</code>创建Buffer对象的时候,如果<code>size</code>小于或者等于<code>Buffer.poolSize</code>的一半,<br>那么,该对象将有可能分配到一个共享内存池(译者:被使用过,然后回收的内存)</p>
+<h3 id="The-–zero-fill-buffers-command-line-option"><a href="#The-–zero-fill-buffers-command-line-option" class="headerlink" title="The –zero-fill-buffers command line option"></a>The –zero-fill-buffers command line option</h3><p>Node.js使用<code>--zero-fill-buffers</code>命令行参数,能够强制所有通过<code>new Buffer(size)</code>,<code>Buffer.allocUnsafe(size)</code>,<br><code>Buffer.allocUnsafeSlow(size)</code>,<code>new SlowBuffer(size)</code>创建的Buffer对象自动填充0,该命令参数能够改变这些方法的默认行为,<br>这对于性能有显著的影响。推荐使用<code>zero-fill-buffers</code>命令行参数,该命令行参数可以杜绝Buffer对象包含敏感数据的可能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ node --zero-fill-buffers</div><div class="line">&gt; Buffer.allocUnsafe(5);</div><div class="line">&lt;Buffer 00 00 00 00 00&gt;</div></pre></td></tr></table></figure>
+<h3 id="是什么导致Buffer-allocUnsafe-size-和Buffer-allocUnsafeSlow-size-“不安全”"><a href="#是什么导致Buffer-allocUnsafe-size-和Buffer-allocUnsafeSlow-size-“不安全”" class="headerlink" title="是什么导致Buffer.allocUnsafe(size)和Buffer.allocUnsafeSlow(size) “不安全”?"></a>是什么导致<code>Buffer.allocUnsafe(size)</code>和<code>Buffer.allocUnsafeSlow(size)</code> “不安全”?</h3><p>当调用<code>Buffer.allocUnsafe()</code>(和<code>Buffer.allocUnsafeSlow()</code>)创建Buffer对象时,分配到的内存并没有被初始化(归零),<br>这种设计会使得分配内存相当快,同时,也导致会有一些老的数据和敏感数据,如果在创建之后也没有在该内存上写入新的数据,那么,当读取该Buffer对象<br>的时候就有可能导致信息泄露。</p>
+<p>你已经知道<code>Buffer.allocUnsafe()</code>会导致的问题,那么在使用的时候就得非常小心,避免出现安全问题。</p>
+<h2 id="Buffers和字符编码"><a href="#Buffers和字符编码" class="headerlink" title="Buffers和字符编码"></a>Buffers和字符编码</h2><p>Buffers通常用来呈现一堆编译过的字符,这些字符可能使用了UTF8,UCS2,Base64甚至16进制编码。而且,通过一些方法,它们会在Buffers和普通的<br>JavaScript字符串对象间来回转换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const buf = Buffer.from(&apos;hello world&apos;, &apos;ascii&apos;);</div><div class="line">console.log(buf.toString(&apos;hex&apos;));</div><div class="line">  // prints: 68656c6c6f20776f726c64</div><div class="line">console.log(buf.toString(&apos;base64&apos;));</div><div class="line">  // prints: aGVsbG8gd29ybGQ=</div></pre></td></tr></table></figure>
+<p>当前,Node.js支持的字符编码有:</p>
+<ul>
+<li><code>ascii</code></li>
+<li><code>utf8</code></li>
+<li><code>utf16le</code></li>
+<li><code>ucs2</code> - <code>utf16le</code>的别名</li>
+<li><code>base64</code></li>
+<li><code>binary</code></li>
+<li><code>hex</code></li>
+</ul>
+<h2 id="Buffers-和-TypedArray"><a href="#Buffers-和-TypedArray" class="headerlink" title="Buffers 和 TypedArray"></a>Buffers 和 TypedArray</h2><p>Buffer对象就是<code>Uint8Array</code>的实例,<code>Unit8Array</code>是TypeArray的一个实现。在ECMAScript2015中,它们和TypedArray有点小小的不兼容。<br>比如,<code>ArrayBuffer#slice()</code>创建一个切片副本,<code>Buffer#slice</code>创建一个针对现有Buffer的一个视图,而不是副本,<code>Buffer#slice()</code>更有效率。</p>
+<p>你通过使用一个Buffer对象来生成数据的时候,需要注意这些问题:</p>
+<ol>
+<li>这个Buffer对象的内存数据被copy到TypedArray中,不是共享。</li>
+<li>使用<code>new Uint32Array(Buffer.from([1,2,3,4]))</code>将创建一个由4各元素组成的<code>Uint32Array</code>,而不是1个元素组成的<code>Uint32Array</code>,<br>不是<code>[0x1020304]</code>,也不是<code>[0x4030201]</code></li>
+</ol>
+<p>你可以使用TypedArray的.buffer属性,来创建一个和TypedArray共享内存块的Buffer对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">const arr = new Uint16Array(2);</div><div class="line">arr[0] = 5000;</div><div class="line">arr[1] = 4000;</div><div class="line"></div><div class="line">const buf1 = Buffer.from(arr); // copies the buffer</div><div class="line">const buf2 = Buffer.from(arr.buffer); // shares the memory with arr;</div><div class="line"></div><div class="line">console.log(buf1);</div><div class="line">  // Prints: &lt;Buffer 88 a0&gt;, copied buffer has only two elements</div><div class="line">console.log(buf2);</div><div class="line">  // Prints: &lt;Buffer 88 13 a0 0f&gt;</div><div class="line"></div><div class="line">arr[1] = 6000;</div><div class="line">console.log(buf1);</div><div class="line">  // Prints: &lt;Buffer 88 a0&gt;</div><div class="line">console.log(buf2);</div><div class="line">  // Prints: &lt;Buffer 88 13 70 17&gt;</div></pre></td></tr></table></figure>
+<p>注意,当把一个TypedArray对象的buffer属性作为一个参数来创建Buffer对象的时候,可以通过<code>byteOffset</code><br>和<code>length</code>参数来指定使用部分数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const arr = new Uint16Array(20);</div><div class="line">const buf = Buffer.from(arr.buffer, 0, 16);</div><div class="line">console.log(buf.length);</div><div class="line">  // Prints: 16</div></pre></td></tr></table></figure>
+<p><code>Buffer.from()</code> 和 <code>TypedArray.from()</code> (e.g.Uint8Array.from())`具有不同的签名和实现。具体的说,<br>TypedArray可以接受一个mapping函数作为第二个参数,该函数会将数组中的每个元素作为参数执行一次。</p>
+<ul>
+<li><code>TypedArray.from(source[, mapFn[, thisArg]])</code><br><code>Buffer.from()</code>,不支持使用mapping函数:</li>
+<li><code>Buffer.from(array)</code></li>
+<li><code>Buffer.from(buffer)</code></li>
+<li><code>Buffer.from(arrayBuffer[, byteOffset [, length]])</code></li>
+<li><code>Buffer.from(str[, encoding])</code></li>
+</ul>
+<p>##Buffer和ES6迭代器</p>
+<p>ECMAScript2015(ES6)中,Buffer能够使用<code>for..of</code>来迭代:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const buf = Buffer.from([1, 2, 3]);</div><div class="line"></div><div class="line">for (var b of buf)</div><div class="line">  console.log(b)</div><div class="line"></div><div class="line">// Prints:</div><div class="line">//   1</div><div class="line">//   2</div><div class="line">//   3</div></pre></td></tr></table></figure>
+<p>另外,<code>buf.values()</code>,<code>buf.keys()</code>,<code>buf.entries()</code>能够用来创建迭代器。</p>
+<h2 id="Buffer类"><a href="#Buffer类" class="headerlink" title="Buffer类"></a>Buffer类</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Buffer/" data-id="ciq0b4oq70001fgfy61puthxd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ChildProcesses" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Child-Process"><a href="#title-Child-Process" class="headerlink" title="title:Child Process"></a>title:Child Process</h2><p>#Child Process</p>
+<p>[TOC]</p>
+<p><code>child_process</code>能够以一种近似但不同于<a href="http://man7.org/linux/man-pages/man3/popen.3.html" target="_blank" rel="external">popen(3)</a>的方式来生成子进程,<br>该功能主要由<code>child_process.spawn()</code>提供。</p>
+<p>译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.<br>管道定义为单向的,参数type表明是读还是写,不能两者兼有。响应的产生的流也是只读或者只写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const spawn = require(&apos;child_process&apos;).spawn;</div><div class="line">const ls = spawn(&apos;ls&apos;, [&apos;-lh&apos;, &apos;/usr&apos;]);</div><div class="line"></div><div class="line">ls.stdout.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(`stdout: $&#123;data&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">ls.stderr.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(`stderr: $&#123;data&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">ls.on(&apos;close&apos;, (code) =&gt; &#123;</div><div class="line">  console.log(`child process exited with code $&#123;code&#125;`);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>默认,<code>stdin</code>,<code>stdout</code>,<code>stderr</code>管道在父Node.js进程和生成的子进程之间建立。它能够通过一种无阻塞的方法传输数据。注意,<br>一些程序使用内部的 line-bufferedI/O。然而这并不影响Node.js,它意味着发送给子进程的数据不会立即销毁。</p>
+<p><code>child_process.spawn()</code>方法生成异步子进程,不会阻断Node.js事件循环。<br><code>child_process.spawnSync()</code>方法提供一个一样的方法,只不过该方法是同步的,它能够阻断事件循环,直到生成的进程退出或者被终止。</p>
+<p>为了方便,<code>child_process</code>模块提供少量的同步和异步方法来替代<code>child_process.spawn()</code>和<code>child_process.spawnSync()</code>。<br>注意它们的每个替代方法都是在<code>child_process.spawn()</code>和<code>child_process.spawnSync()</code>基础上实现的。</p>
+<ul>
+<li><code>child_process.exec()</code>:生成一个shell并在该shell中运行一个命令,执行完成时传递<code>stdout</code>和<code>stderr</code>给回调函数。</li>
+<li><code>child_process.execFile()</code>:类似<code>child_process.exec()</code>,区别在它在没有首先生成一个shell而是直接生成命令。</li>
+<li><code>child_process.fork()</code>:生成一个新的Node.js进程,并调用指定模块与IPC通信信道建立允许父级和子级之间发送信息。</li>
+<li><code>child_process.execSync()</code>:同步版的<code>child_process.exec()</code>,将会阻断Node.js事件循环。</li>
+<li><code>child_process.execFileSync()</code>:同步版的<code>child_process.execFile()</code>,将会阻断Node.js事件循环。</li>
+</ul>
+<p>在某些使用情况,像自动执行shell脚本,同步执行可能更加方便。大多数情况,当生成进程完成时,同步方法阻塞事件循环会对性能产生巨大影响。</p>
+<h2 id="异步进程创建"><a href="#异步进程创建" class="headerlink" title="异步进程创建"></a>异步进程创建</h2><p><code>child_process.spawn()</code> <code>child_process.fork</code> <code>child_process.exec()</code> <code>child_process.exeFile()</code> 这些方法跟其他Node.js API一样,符合典型的异步编程模式。</p>
+<p>每个方法返回一个<code>ChildProcess</code>实例。该对象实现Node.js <code>EventEmitter</code> API。允许父进程注册侦听方法,当某个事件在子进程生命周期触发的时候执行。</p>
+<p><code>child_process.exec()</code> <code>child_process.execFile()</code>方法允许指定一个明确的<code>callback</code>方法,当子进程终止的时候执行。</p>
+<h3 id="Windows中生成-bat-和-cmd文件"><a href="#Windows中生成-bat-和-cmd文件" class="headerlink" title="Windows中生成 .bat 和 .cmd文件"></a>Windows中生成 <code>.bat</code> 和 <code>.cmd</code>文件</h3><p><code>child_process.exec()</code>和<code>child_proces.execFile()</code>的重要区别是基于平台的改变。在Unix类型的操作系统<code>child_process.exeFile()</code>更有效率,<br>因为它没有生成shell。在Windows平台,<code>.bat</code>和<code>.cmd</code>文件不能有在没有终端的情况下执行,因此使用<code>child_process.execFile()</code>将不能被执行,通常使用<br><code>child_process.spawn()</code>加上<code>shell</code> option设置,使用<code>child_process.exec()</code>,或者生成<code>cmd.exe</code>并传递<code>.bat</code> <code>.cmd</code>文件和参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// On Windows Only ...</div><div class="line">const spawn = require(&apos;child_process&apos;).spawn;</div><div class="line">const bat = spawn(&apos;cmd.exe&apos;, [&apos;/c&apos;, &apos;my.bat&apos;]);</div><div class="line"></div><div class="line">bat.stdout.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">bat.stderr.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">bat.on(&apos;exit&apos;, (code) =&gt; &#123;</div><div class="line">  console.log(`Child exited with code $&#123;code&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// OR...</div><div class="line">const exec = require(&apos;child_process&apos;).exec;</div><div class="line">exec(&apos;my.bat&apos;, (err, stdout, stderr) =&gt; &#123;</div><div class="line">  if (err) &#123;</div><div class="line">    console.error(err);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line">  console.log(stdout);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>###child_process.exec(command[,option][,callback])</p>
+<ul>
+<li>command \<string> 运行的命令,参数使用空格分开</string></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>encoding</code> \<string> 默认为<code>utf8</code></string></li>
+<li><code>shell</code> \<string> 要执行的命令(默认:UNIX下为<code>/bin/sh</code>,Windows下为<code>cmd.exe</code>)</string></li>
+<li><code>timeout</code> \<number> 默认为0</number></li>
+<li><code>maxBuffer</code> \<number> 允许stdout或stderr的最大数据量(单位:byte),超出的部分将被kill(默认:200*1024)</number></li>
+<li><code>killSIgnal</code> \<string> (默认:<code>SIGTERM</code>)</string></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p>当执行的命令在shell里面的时候生成一个shell,缓存任何生成的输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const exec = require(&apos;child_process&apos;).exec;</div><div class="line">exec(&apos;cat *.js bad_file | wc -l&apos;, (error, stdout, stderr) =&gt; &#123;</div><div class="line">  if (error) &#123;</div><div class="line">    console.error(`exec error: $&#123;error&#125;`);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line">  console.log(`stdout: $&#123;stdout&#125;`);</div><div class="line">  console.log(`stderr: $&#123;stderr&#125;`);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>如果提供了callback。它将和参数(error,stdout,stderr)一起执行。执行成功error将为null。如果错误,error将是一个Error对象。<br>error.code属性为子进程的退出码,而error.signal将被设置为终止进程的信号。任何非0得退出码都将被认为是错误。</p>
+<p>传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。<br>encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是<code>buffer</code>,一个Buffer对象将被传递到callback。</p>
+<p>options参数作为第二个参数,用来定义如何生成进程。默认选项为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  encoding: &apos;utf8&apos;,</div><div class="line">  timeout: 0,</div><div class="line">  maxBuffer: 200*1024,</div><div class="line">  killSignal: &apos;SIGTERM&apos;,</div><div class="line">  cwd: null,</div><div class="line">  env: null</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果设置timeout大于0,单子进程运行超过timeout毫秒之后,父进程将发送<code>killSignal</code>属性的信号标识(默认为<code>SIGTERM</code>)。</p>
+<p>注意:不像POSIX系统调用,<code>child_process.exec()</code>没有代替已经存在的进程,而是使用一个shell来执行命令。</p>
+<h3 id="child-process-execFile-file-arg-options-callback"><a href="#child-process-execFile-file-arg-options-callback" class="headerlink" title="child_process.execFile(file[,arg][,options][,callback])"></a>child_process.execFile(file[,arg][,options][,callback])</h3><ul>
+<li>file \<string> 可执行文件的名称,或运行的地址</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>encoding</code> \<string> 默认为<code>utf8</code></string></li>
+<li><code>shell</code> \<string> 要执行的命令(默认:UNIX下为<code>/bin/sh</code>,Windows下为<code>cmd.exe</code>)</string></li>
+<li><code>timeout</code> \<number> 默认为0</number></li>
+<li><code>maxBuffer</code> \<number> 允许stdout或stderr的最大数据量(单位:byte),超出的部分将被kill(默认:200*1024)</number></li>
+<li><code>killSIgnal</code> \<string> (默认:<code>SIGTERM</code>)</string></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p>child_process.execFile()方法类似child_process.exec(),区别在它不生成一个shell。当然,指定的可执行文件像一个新进程被直接生成,<br>使得相比child_process.exec()更加有效率一点。</p>
+<p>同样也支持options参数。由于没有生成一个shell,一些行为像I/O重定向以及文件通配符都不被支持。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const execFile = require(&apos;child_process&apos;).execFile;</div><div class="line">const child = execFile(&apos;node&apos;, [&apos;--version&apos;], (error, stdout, stderr) =&gt; &#123;</div><div class="line">  if (error) &#123;</div><div class="line">    throw error;</div><div class="line">  &#125;</div><div class="line">  console.log(stdout);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。<br>encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是<code>buffer</code>,一个Buffer对象将被传递到callback。</p>
+<p>###child_process.fork(modulePath[,arg][,options])</p>
+<ul>
+<li>modulePath \<string> 该模版在子进程中运行</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>execPath</code> \<string> 用来创建可执行的子进程</string></li>
+<li><code>execArgv</code> \<array> 传递给可执行子进程的string参数列表(默认:process.execArgv)</array></li>
+<li><code>silent</code> \<boolean> 如果为true,stdin,stdout,stderr将建立子进程到父进程的管道,否则将从父进程继承,<br>参考child_process.spawn()的<code>stdio</code>的<code>pipe</code>和<code>inherit</code>参数来了解更多(默认:false)</boolean></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p><code>child_process.fork()</code>方法是<code>child_process.spawn()</code>的一个特殊情况,用来明确的创建一个新的Node.js进程。<br><code>child_process.spawn()</code>将返回一个ChildProcess对象。该返回对象将构建子和父之间的双向通信信道。查看<code>child.send()</code>了解更多。</p>
+<p>需要记住,生成Node.js子进程不依赖父进程,除非IPC通信信道简历在两者之间。每个进程有其自己的内存,和他们自己的V8实例。<br>由于额外的资源分配请求,不推荐生成多个Node.js子进程。</p>
+<p>默认,child_process.fork()将生成新的Node.js实例,使用父进程的process.execPath。options里面的execPath属性允许使用另外的执行路径。</p>
+<p>通过自定义execPath执行得到的Node.js进程,将和父进程使用子进程的环境变量NODE_CHANNEL_FD定义的标识进行通讯。<br>fd上的输入和输出被期望行分(line delimited)JSON对象。</p>
+<p>注意:不同于fork POSIX 系统调用,child_process.fork()不clone当前进程。</p>
+<p>###child_process.spawn(command,[,arg][,options])</p>
+<ul>
+<li>command \<string> 运行的命令</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li>cwd \<string> 当前子进程的工作目录</string></li>
+<li>env \<object> 环境变量的键值对</object></li>
+<li>stdio \<array> | \<string> 子进程的 stdio 配置. (See options.stdio)</string></array></li>
+<li>detached \<boolean> 预备将子进程独立于父进程运行. 具体行为区别于平台, (see options.detached)</boolean></li>
+<li>uid \<number> 设置进程的用户标识 (See setuid(2).)</number></li>
+<li>gid \<number> 设置进程的组标识 (See setgid(2).)</number></li>
+<li>shell \<boolean> | \<string> 如果为true,在shell中运行命令,UNIX使用<code>/bin/sh</code>,Windows使用<code>cmd.exe</code>。<br>一个不同的shell使用字符串来指定。shell应该明白UNIX中的-c,或Windows中的/s /c。默认为false(没有shell)</string></boolean></li>
+</ul>
+</object></li>
+<li>return:\<childprocess></childprocess></li>
+</ul>
+<p>child_process.spawn()方法使用提供的命令生成一个新的进程,参数在args中指出。如果忽略,args默认为空数组。</p>
+<p>第三个参数被用来指定额外的选项,默认为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    cwd:undefined,</div><div class="line">    env:process.env</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用cwd指定工作目录</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/ChildProcesses/" data-id="ciq0b4oqa0002fgfyx9idju70" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Console" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Console/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Console"><a href="#title-Console" class="headerlink" title="title:Console"></a>title:Console</h2><p>#Console<br><code>console</code>模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。</p>
+<p>该模块导出两个特殊的组件:</p>
+<ul>
+<li><p><code>Console</code>类,有这些方法,<code>console.log()</code>,<code>console.error()</code>,<code>console.warn()</code>能够用来写出任何的Node.js流</p>
+</li>
+<li><p>一个全局的<code>console</code>实例,设定写<code>stdout</code>,<code>stderr</code>。因为对象是全局的,你不必执行<code>require(&#39;console&#39;)</code>。</p>
+</li>
+</ul>
+<p>以下是使用<code>console</code>的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;hello world&apos;);</div><div class="line">  // Prints: hello world, to stdout</div><div class="line">console.log(&apos;hello %s&apos;, &apos;world&apos;);</div><div class="line">  // Prints: hello world, to stdout</div><div class="line">console.error(new Error(&apos;Whoops, something bad happened&apos;));</div><div class="line">  // Prints: [Error: Whoops, something bad happened], to stderr</div><div class="line"></div><div class="line">const name = &apos;Will Robinson&apos;;</div><div class="line">console.warn(`Danger $&#123;name&#125;! Danger!`);</div><div class="line">  // Prints: Danger Will Robinson! Danger!, to stderr</div></pre></td></tr></table></figure>
+<p>使用<code>Console</code>类的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const out = getStreamSomehow();</div><div class="line">const err = getStreamSomehow();</div><div class="line">const myConsole = new console.Console(out, err);</div><div class="line"></div><div class="line">myConsole.log(&apos;hello world&apos;);</div><div class="line">  // Prints: hello world, to out</div><div class="line">myConsole.log(&apos;hello %s&apos;, &apos;world&apos;);</div><div class="line">  // Prints: hello world, to out</div><div class="line">myConsole.error(new Error(&apos;Whoops, something bad happened&apos;));</div><div class="line">  // Prints: [Error: Whoops, something bad happened], to err</div><div class="line"></div><div class="line">const name = &apos;Will Robinson&apos;;</div><div class="line">myConsole.warn(`Danger $&#123;name&#125;! Danger!`);</div><div class="line">  // Prints: Danger Will Robinson! Danger!, to err</div></pre></td></tr></table></figure>
+<p>Console类从根本上是围绕浏览器的console对象设计的,但是,Node.js没打算精确的复制浏览器中console的所有方法。</p>
+<p>##同步 vs 异步 Console</p>
+<p><code>console</code>方法是异步的,除非目标是一个文件。磁盘很快速,并且操作系统通常会使用write-back缓存。大块文件写入是比较罕见的,但是,也不是不可能。</p>
+<p>##<code>Console</code>类</p>
+<p>###new Console(stdout[,stderr])</p>
+<p>###console.assert(value[,messages][,…])</p>
+<p>###console.dir(obj[,options])</p>
+<p>###console.error([data][,…])</p>
+<p>###console.info([data][,…])</p>
+<p>###console.log([data][,…])</p>
+<p>###console.time(label)</p>
+<p>###console.warn([data][,…])</p>
+<p>###console.timeEnd(label)</p>
+<p>###console.trace(message[,…])</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Console/" data-id="ciq0b4oqb0003fgfy9044gz4b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Debugger" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Debugger/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Debugger"><a href="#title-Debugger" class="headerlink" title="title:Debugger"></a>title:Debugger</h2><p>#Debugger</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Debugger/" data-id="ciq0b4oqc0004fgfy4voy53ln" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Cluster/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Cluster"><a href="#title-Cluster" class="headerlink" title="title:Cluster"></a>title:Cluster</h2><p>#Cluster</p>
+<p>跑在一个独立线程的Node.js单例。在用户想要通过执行一批Node.js进程控制加载的时候,提升多核系统性能。</p>
+<p>cluster模块允许你简单的创建共享服务端口的子进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">const cluster = require(&apos;cluster&apos;);</div><div class="line">const http = require(&apos;http&apos;);</div><div class="line">const numCPUs = require(&apos;os&apos;).cpus().length;</div><div class="line"></div><div class="line">if (cluster.isMaster) &#123;</div><div class="line">  // Fork workers.</div><div class="line">  for (var i = 0; i &lt; numCPUs; i++) &#123;</div><div class="line">    cluster.fork();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  cluster.on(&apos;exit&apos;, (worker, code, signal) =&gt; &#123;</div><div class="line">    console.log(`worker $&#123;worker.process.pid&#125; died`);</div><div class="line">  &#125;);</div><div class="line">&#125; else &#123;</div><div class="line">  // Workers can share any TCP connection</div><div class="line">  // In this case it is an HTTP server</div><div class="line">  http.createServer((req, res) =&gt; &#123;</div><div class="line">    res.writeHead(200);</div><div class="line">    res.end(&apos;hello world\n&apos;);</div><div class="line">  &#125;).listen(8000);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Cluster/" data-id="ciq0b4opu0000fgfyajxk0as3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-OS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/OS/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-OS"><a href="#title-OS" class="headerlink" title="title:OS"></a>title:OS</h2><p>#OS</p>
+<p>提供一些跟操作系统相关的方法。</p>
+<p>使用require(‘os’)来访问该模块</p>
+<p>以下是我机器截图,供参考<br><img src="../images/os_1.jpg" alt=""><br><img src="../images/os_2.jpg" alt=""><br><img src="../images/os_3.jpg" alt=""></p>
+<p>##os.EOL<br>一个常量,操作系统行尾标识。</p>
+<p>##os.arch()<br>返回操作系统CPU架构,如:<code>x64</code>,<code>arm</code>,<code>ia32</code>,返回<code>process.arch</code>的值。</p>
+<p>##os.cpus()<br>返回一个数组对象,该对象包括了CPU的安装信息:model,speed,times</p>
+<p>例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">[ &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 252020,</div><div class="line">       nice: 0,</div><div class="line">       sys: 30340,</div><div class="line">       idle: 1070356870,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 306960,</div><div class="line">       nice: 0,</div><div class="line">       sys: 26980,</div><div class="line">       idle: 1071569080,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 248450,</div><div class="line">       nice: 0,</div><div class="line">       sys: 21750,</div><div class="line">       idle: 1070919370,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 256880,</div><div class="line">       nice: 0,</div><div class="line">       sys: 19430,</div><div class="line">       idle: 1070905480,</div><div class="line">       irq: 20 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 511580,</div><div class="line">       nice: 20,</div><div class="line">       sys: 40900,</div><div class="line">       idle: 1070842510,</div><div class="line">       irq: 0 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 291660,</div><div class="line">       nice: 0,</div><div class="line">       sys: 34360,</div><div class="line">       idle: 1070888000,</div><div class="line">       irq: 10 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 308260,</div><div class="line">       nice: 0,</div><div class="line">       sys: 55410,</div><div class="line">       idle: 1071129970,</div><div class="line">       irq: 880 &#125; &#125;,</div><div class="line">  &#123; model: &apos;Intel(R) Core(TM) i7 CPU         860  @ 2.80GHz&apos;,</div><div class="line">    speed: 2926,</div><div class="line">    times:</div><div class="line">     &#123; user: 266450,</div><div class="line">       nice: 1480,</div><div class="line">       sys: 34920,</div><div class="line">       idle: 1072572010,</div><div class="line">       irq: 30 &#125; &#125; ]</div></pre></td></tr></table></figure></p>
+<p>##os.endianness()<br>参考<a href="http://es6.ruanyifeng.com/#docs/arraybuffer#字节序" target="_blank" rel="external">字节序</a></p>
+<p>##os.freemem()<br>返回空闲内存大小,单位byte</p>
+<p>##os.homedir()<br>返回当前用户的主文件夹位置</p>
+<p>##os.hostname()<br>返回操作系统的主机名称</p>
+<p>##os.loadavg()<br>返回1,5,15分钟的平均负载</p>
+<p>##os.networkInterface()<br>获取网络信息列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123; lo:</div><div class="line">   [ &#123; address: &apos;127.0.0.1&apos;,</div><div class="line">       netmask: &apos;255.0.0.0&apos;,</div><div class="line">       family: &apos;IPv4&apos;,</div><div class="line">       mac: &apos;00:00:00:00:00:00&apos;,</div><div class="line">       internal: true &#125;,</div><div class="line">     &#123; address: &apos;::1&apos;,</div><div class="line">       netmask: &apos;ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff&apos;,</div><div class="line">       family: &apos;IPv6&apos;,</div><div class="line">       mac: &apos;00:00:00:00:00:00&apos;,</div><div class="line">       internal: true &#125; ],</div><div class="line">  eth0:</div><div class="line">   [ &#123; address: &apos;192.168.1.108&apos;,</div><div class="line">       netmask: &apos;255.255.255.0&apos;,</div><div class="line">       family: &apos;IPv4&apos;,</div><div class="line">       mac: &apos;01:02:03:0a:0b:0c&apos;,</div><div class="line">       internal: false &#125;,</div><div class="line">     &#123; address: &apos;fe80::a00:27ff:fe4e:66a1&apos;,</div><div class="line">       netmask: &apos;ffff:ffff:ffff:ffff::&apos;,</div><div class="line">       family: &apos;IPv6&apos;,</div><div class="line">       mac: &apos;01:02:03:0a:0b:0c&apos;,</div><div class="line">       internal: false &#125; ] &#125;</div></pre></td></tr></table></figure>
+<p>##os.platform()<br>返回操作系统平台。值可能是darwin,freebsd,linux,sunos,win32,返回process.platform()的值</p>
+<p>##os.release()<br>返回操作系统的版本。</p>
+<p>##os.tmpdir()<br>返回操作系统默认临时文件夹</p>
+<p>##os.totalmem()<br>返回系统总的内存大小,单位byte</p>
+<p>##os.type()<br>返回操作系统名称,例:linux,darwin,windows_NT。</p>
+<p>##os.uptime()<br>返回系统运行时间,单位second(秒)。</p>
+<p>##os.userInfo([options])</p>
+<ul>
+<li><code>options</code> \<objecct><ul>
+<li><code>encoding</code> \<string></string></li>
+</ul>
+</objecct></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/OS/" data-id="ciq0b4oqh0006fgfyeucr6bkk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Modules" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Modules/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Modules"><a href="#title-Modules" class="headerlink" title="title:Modules"></a>title:Modules</h2><p>#Modules</p>
+<p>Node.js 有一个简单的模块加载系统。在Node.js,文件和模块是一对一的关系。比如,<code>foo.js</code>在同样的文件夹加载<code>circle.js</code>模块。</p>
+<p><code>foo.js</code>的内容:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const circle = require(&apos;./circle.js&apos;);</div><div class="line">console.log( `The area of a circle of radius 4 is $&#123;circle.area(4)&#125;`);</div></pre></td></tr></table></figure></p>
+<p><code>circle.js</code>的内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const PI = Math.PI;</div><div class="line">exports.area = (r) =&gt; PI * r * r;</div><div class="line">exports.circumference = (r) =&gt; 2 * PI * r;</div></pre></td></tr></table></figure>
+<p>模块<code>circle.js</code>导出了方法<code>area()</code>和<code>circumference()</code>。你能够将需要导出的方法和对象添加到专门的<code>exports</code>对象,以便能够在root层使用它们。</p>
+<p>本地模块以私有化的形式存在,因为Node.js将模块包装在一个方法中。上例中,变量<code>PI</code>是私有对象。</p>
+<p>如果你想在你的root模块中通过一次分配导出一个方法或者导出一个完整的对象而不是每次导出一个属性,你应该使用<code>module.exports</code>而不是<code>exports</code>。</p>
+<p>下面,<code>bar.js</code>使用了<code>square</code>模版,导出一个构造函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const square = require(&apos;./square.js&apos;);</div><div class="line">var mySquare = square(2);</div><div class="line">console.log(`The area of my square is $&#123;mySquare.area()&#125;`);</div></pre></td></tr></table></figure>
+<p><code>square</code>模版定义在<code>square.js</code>中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// assigning to exports will not modify module, must use module.exports</div><div class="line">module.exports = (width) =&gt; &#123;</div><div class="line">  return &#123;</div><div class="line">    area: () =&gt; width * width</div><div class="line">  &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>模版系统在<code>require(&quot;module&quot;)</code>模块中实现。</p>
+<p>##访问主模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.log(require.main===module)</div></pre></td></tr></table></figure>
+<p>以上代码写在<code>foo.js</code>文件中,通过<code>node foo.js</code>运行是<code>true</code>,但是,通过<code>require(&#39;./foo&#39;)</code>运行则为<code>false</code>。第一种运行方式表明foo.js是主模块,<br>第二种方式表明foo.js不是主模块。也就是说,通过这种方式你能够决定文件以哪种方式云行。</p>
+<p>因为<code>module</code>提供了一个<code>filename</code>属性,应用程序的入口可以通过<code>require.main.filename</code>获得。</p>
+<p>##附录:包管理窍门</p>
+<p>Node.js的<code>require()</code>被设计成能够支持大量合理的文件结构。<br>包管理工具,像<code>dpkg</code>,<code>rpm</code>,<code>npm</code>,都希望在不做任何修改的情况下通过Node.js构建本地模块。</p>
+<p>以下,我们给出了一个建议文件结构:</p>
+<p><code>/usr/lib/node/&lt;some-package&gt;/&lt;some-version&gt;</code></p>
+<p>一个包可以依赖另外一个包。为了安装<code>foo</code>包,你可能需要安装指定版本的<code>bar</code>包,<code>bar</code>包可能还有自己的依赖,在一些情况,依赖关系甚至会出现冲突,或者出现环形依赖。</p>
+<p>Node.js查阅了所有加载模块的<code>realpath</code>,并且找到它们之间的依赖关系,按照以下方法,非常简单的解决了以上问题。</p>
+<ul>
+<li><code>/usr/lib/mode/foo/1.2.3</code></li>
+<li><code>/usr/lib/mode/bar/4.3.2</code> foo所依赖</li>
+<li><code>/usr/lib/mode/foo/1.2.3/node_modules/bar</code> 连接到<code>/usr/lib/node/bar/4.3.2</code></li>
+<li><code>/usr/lib/mode/bar/4.3.2/node_modules/*</code> 连接到<code>bar</code>所依赖的包</li>
+</ul>
+<p>由此,如果你遭遇到环形依赖,或者依赖冲突,模块都能够获得一个能够使用的依赖版本。</p>
+<p>当<code>foo</code>包中代码执行<code>require(&#39;bar&#39;)</code>,你将连接到<code>/usr/lib/node/foo/1.2.3/node_modules/bar</code>。这是,当<code>bar</code>包中代码<br>执行<code>require(&#39;quux&#39;)</code>,它将连接到<code>/usr/lib/node/bar/4.3.2/node_modules/quux</code>获取版本。</p>
+<p>此外,为了使得查找模块更加迅速,我们将模块放置在<code>/usr/lib/node_modules/&lt;name&gt;/&lt;version&gt;</code>,快过直接放置在<code>/usr/lib/node</code>。</p>
+<p>为了使得模块在Node.js REPL中可用,我们通常将<code>/usr/lib/node_modules</code>文件夹添加到环境变量<code>$NODE_PATH</code>中。所有<code>node_modules</code>查阅都是相对的,<br>如果基于文件的实际路径通过<code>require()</code>来查找,那么包可以放置在任何位置。</p>
+<p>##All Together</p>
+<p>想要获取待加载模块的精确文件名,需要等<code>require()</code>执行之后,通过<code>require.resolve()</code>方法获取。</p>
+<p>以下是<code>require.resolve()</code>方法执行的伪代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">require(X) from module at path Y</div><div class="line">从Y文件夹中请求模块X</div><div class="line"></div><div class="line">1. If X is a core module, 如果X是核心模块</div><div class="line">   a. return the core module   返回核心模块</div><div class="line">   b. STOP</div><div class="line">2. If X begins with &apos;./&apos; or &apos;/&apos; or &apos;../&apos;    如果X由&apos;./&apos; or &apos;/&apos; or &apos;../&apos;开始</div><div class="line">   a. LOAD_AS_FILE(Y + X)   通过Y+X加载文件,详细参考下面针对该方法的描述</div><div class="line">   b. LOAD_AS_DIRECTORY(Y + X)  通过Y+X加载文件夹,详细参考下面针对该方法的描述</div><div class="line">3. LOAD_NODE_MODULES(X, dirname(Y))</div><div class="line">4. THROW &quot;not found&quot; 抛出异常</div><div class="line"></div><div class="line">LOAD_AS_FILE(X)</div><div class="line">// X是文件,像js文件一样加载,stop</div><div class="line">1. If X is a file, load X as JavaScript text.  STOP</div><div class="line">// X.js是文件,像加载js文件一样加载,stop</div><div class="line">2. If X.js is a file, load X.js as JavaScript text.  STOP</div><div class="line">//X.json是一个文件,将X.json解析成一个js对象,stop</div><div class="line">3. If X.json is a file, parse X.json to a JavaScript Object.  STOP</div><div class="line">//X.node是一个文件,以二进制的形式加载X.node,stop</div><div class="line">4. If X.node is a file, load X.node as binary addon.  STOP</div><div class="line"></div><div class="line">LOAD_AS_DIRECTORY(X)</div><div class="line"></div><div class="line">// 如果X/package.json是一个文件</div><div class="line">1. If X/package.json is a file,</div><div class="line">    //解析X/package.json,查找&quot;主&quot;域</div><div class="line">   a. Parse X/package.json, and look for &quot;main&quot; field.</div><div class="line">   b. let M = X + (json main field)</div><div class="line">   c. LOAD_AS_FILE(M)</div><div class="line">2. If X/index.js is a file, load X/index.js as JavaScript text.  STOP</div><div class="line">3. If X/index.json is a file, parse X/index.json to a JavaScript object. STOP</div><div class="line">4. If X/index.node is a file, load X/index.node as binary addon.  STOP</div><div class="line"></div><div class="line">LOAD_NODE_MODULES(X, START)</div><div class="line">1. let DIRS=NODE_MODULES_PATHS(START)</div><div class="line">2. for each DIR in DIRS:</div><div class="line">   a. LOAD_AS_FILE(DIR/X)</div><div class="line">   b. LOAD_AS_DIRECTORY(DIR/X)</div><div class="line"></div><div class="line">NODE_MODULES_PATHS(START)</div><div class="line">1. let PARTS = path split(START)</div><div class="line">2. let I = count of PARTS - 1</div><div class="line">3. let DIRS = []</div><div class="line">4. while I &gt;= 0,</div><div class="line">   a. if PARTS[I] = &quot;node_modules&quot; CONTINUE</div><div class="line">   c. DIR = path join(PARTS[0 .. I] + &quot;node_modules&quot;)</div><div class="line">   b. DIRS = DIRS + DIR</div><div class="line">   c. let I = I - 1</div><div class="line">5. return DIRS</div></pre></td></tr></table></figure>
+<p>##缓存</p>
+<p>在第一次加载之后模块就被缓存了,也就是说,只要加载过一次,以后的每次加载都能够快速且精准的被找到。</p>
+<p>多次执行<code>require(&#39;foo&#39;)</code>,不会导致模块被多次执行。这是非常重要的特征。</p>
+<p>//不会翻译<br>With it, “partially done” objects can be returned, thus allowing transitive dependencies to be loaded even when they would cause cycles.</p>
+<p>如果你想多次执行同一个模块,将它导出为一个方法,然后多次执行该方法。</p>
+<p>##模块缓存注意事项</p>
+<p>模块缓存是基于解析出来的文件名,由于模块能够根据存放的位置不同导致最终解析成不同的文件名,因此,如果你在不同的位置调用<code>require(&#39;foo&#39;)</code>,不能够保证总是能够获取同样的对象。</p>
+<p>另外,对于不区分大小写的文件系统或者操作系统,不同的文件名最后对于的可能是同一个文件,但是,缓存依然会将他们当成不同的模块多次加载。<br>比如:<code>require(&#39;./foo&#39;)</code>和<code>require(./FOO)</code>返回两个不同的对象,而不管<code>./foo</code>和<code>./FOO</code>实际上是同一个文件。</p>
+<p>##核心模块<br>Node.js有好几个模块编译成二进制数据。这些模块在本文档的其他地方有更详尽的描述。</p>
+<p>核心模块被定义在Node.js的源文件下面的<code>lib/</code>文件夹下。</p>
+<p>核心模块总是优先加载,比如,request(‘http’)总是返回HTTP模块,即使有一个文件跟这个名字一样。</p>
+<p>##环</p>
+<p>当<code>require()</code>请求形成了一个环,有可能会有模块最终未被执行。<br>比如以下这种情况:</p>
+<p><code>a.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;a starting&apos;);</div><div class="line">exports.done = false;</div><div class="line">const b = require(&apos;./b.js&apos;);</div><div class="line">console.log(&apos;in a, b.done = %j&apos;, b.done);</div><div class="line">exports.done = true;</div><div class="line">console.log(&apos;a done&apos;);</div></pre></td></tr></table></figure>
+<p><code>b.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;b starting&apos;);</div><div class="line">exports.done = false;</div><div class="line">const a = require(&apos;./a.js&apos;);</div><div class="line">console.log(&apos;in b, a.done = %j&apos;, a.done);</div><div class="line">exports.done = true;</div><div class="line">console.log(&apos;b done&apos;);</div></pre></td></tr></table></figure>
+<p><code>main.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;main starting&apos;);</div><div class="line">const a = require(&apos;./a.js&apos;);</div><div class="line">const b = require(&apos;./b.js&apos;);</div><div class="line">console.log(&apos;in main, a.done=%j, b.done=%j&apos;, a.done, b.done);</div></pre></td></tr></table></figure>
+<p>当<code>main.js</code>加载<code>a.js</code>,<code>a.js</code>转而加载<code>b.js</code>,此时,<code>b.js</code>又试图加载<code>a.js</code>,为了避免形成无限循环,将一个未完成copy的<code>a.js</code>返回给<code>b.js</code>模块。<br>待<code>b.js</code>完成加载之后,再将<code>b.js</code>导出并提供给<code>a.js</code>模块。</p>
+<p>这时<code>main.js</code>加载这两个模块,都能够完成,输出结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ node main.js</div><div class="line">main starting</div><div class="line">a starting</div><div class="line">b starting</div><div class="line">in b, a.done = false</div><div class="line">b done</div><div class="line">in a, b.done = true</div><div class="line">a done</div><div class="line">in main, a.done=true, b.done=true</div></pre></td></tr></table></figure>
+<p>如果你的项目中出现了环形依赖,请按照上面的来。</p>
+<p>##文件模块</p>
+<p>如果文件未被找到,Node.js将试图在文件名后面添加扩展名来查找,比如:<code>.js</code>,<code>.json</code>,<code>.node</code>。</p>
+<p><code>.js</code>文件被解释为js文件,<code>.json</code>文件被解释成Json文件,<code>.node</code>文件被解释成通过<code>dlopen</code>编译过的文件。</p>
+<p>模块请求前缀为<code>/</code>是绝对路径,比如:<code>require(&#39;/home/marco/foo.js&#39;)</code>将加载文件<code>/home/marco/foo.js</code>。</p>
+<p>模块请求前缀为<code>./</code>是相对路径,比如,<code>circle.js</code>必须和<code>foo.js</code>在同一个文件夹,才能够在<code>foo.js</code>中通过<code>require(&#39;./circle.js&#39;)</code>找到。</p>
+<p>如果没有<code>/</code>,<code>./</code>,<code>../</code>,那么该木块必须是核心模块,或者在<code>node_modules</code>文件夹中。</p>
+<p>如果通过以上方法都没有找到对应的文件,<code>require()</code>将抛出一个Error,且<code>code</code>属性被设置为<code>MODULE_NOT_FOUND</code>。</p>
+<p>##文件夹模块</p>
+<p>我非常方便的组织程序和库到自己的文件夹中,并且为库提供一个独立的入口。这里有3种方法能够将文件夹传递到<code>require()</code>。</p>
+<p>第一个方法就是在跟目录创建<code>package.json</code>,用它指定一个<code>main</code>模块。想这样:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123; &quot;name&quot; : &quot;some-library&quot;,</div><div class="line">  &quot;main&quot; : &quot;./lib/some-library.js&quot; &#125;</div></pre></td></tr></table></figure>
+<p>如果该文件在 <code>./some-library</code> 文件夹,<code>require(&#39;./some-library&#39;)</code>将试图去加载<code>./some-library/lib/some-library.js</code>。</p>
+<p>package.json文件是Node.js意志的扩展。</p>
+<p>注意:如果通过<code>package.json</code>指定的<code>main</code>入口文件失效或者不能够解析。Node.js将抛出一个错误:</p>
+<p><code>Error:Cannot find module &#39;some-library&#39;</code></p>
+<p>如果没有package.json文件在文件夹中,Node.js会试着去加载文件夹下的<code>index.js</code>或<code>index.node</code>文件。<br>比如:如果没有package.json文件,require(‘./some-library’)将试图加载:</p>
+<ul>
+<li><code>./some-library/index.js</code></li>
+<li><code>./some-library/index.node</code></li>
+</ul>
+<p>##从node_modules文件夹加载<br>如果<code>require()</code>的不是本地模块,也没有<code>/</code>,<code>./</code>,<code>../</code>开始,Node.js会在模块的当前文件夹中创建一个<code>/node_modules</code>文件夹,<br>并从其他位置加载模块。Node不会在<code>node_modules</code>的文件夹后面追加<code>node_modules</code>文件夹。</p>
+<p>例:如果文件<code>/home/ry/projects/foo.js</code>执行<code>require(&#39;bar.js)</code>,Node.js将按照以下顺序查找本地文件。</p>
+<ul>
+<li><code>/home/ry/projects/node_modules/bar.js</code></li>
+<li><code>/home/ry/node_modules/bar.js</code></li>
+<li><code>/home/node_modules/bar.js</code></li>
+<li><code>/node_modules/bar.js</code></li>
+</ul>
+<p>允许程序本地化依赖,解决冲突问题。</p>
+<p>你能够require指定文件或者模块,它们和模块一起分布,分布方式为,模块名+路径后缀。比如,<code>require(&#39;example-module/path/to/file&#39;)</code><br>会解析和本地路径<code>example-module</code>相对的路径<code>path/to/file</code>。后缀路径遵循同样的模块语义规则。</p>
+<h2 id="从全局文件夹加载"><a href="#从全局文件夹加载" class="headerlink" title="从全局文件夹加载"></a>从全局文件夹加载</h2><p>如果<code>NODE_PATH</code>环境变量设置了,如果该模块在其他地方都没有找到,Node.js将从环境变量中定义的路径开始查找。</p>
+<h2 id="模块打包"><a href="#模块打包" class="headerlink" title="模块打包"></a>模块打包</h2><p>模块中的代码被执行之前,Node.js将用一个方法打包他们,看起来像下面这个样子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">(function (exports, require, module, __filename, __dirname) &#123;</div><div class="line">// Your module code actually lives in here</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Node.js干了以下的事情:</p>
+<ul>
+<li>保留模版顶级变量作用域,而不是使用全局对象</li>
+<li><p>提供全局变量,实际上是具体的模块,比如</p>
+<ul>
+<li><code>module</code>和<code>export</code>对象的实现者,能够从模块中导出值</li>
+<li><code>__filename</code>和<code>__dirname</code>变量,表示模块的绝对文件名和文件路径</li>
+</ul>
+</li>
+</ul>
+<h2 id="模块对象"><a href="#模块对象" class="headerlink" title="模块对象"></a>模块对象</h2><ul>
+<li>\<object></object></li>
+</ul>
+<p>每个模块,<code>module</code>变量表示当前模块。为了方便,<code>module.exports</code>也能够通过<code>exports</code>访问,<code>module</code>虽然在每个模块都有该对象,但是他并不是全局变量,<br>只是在每个模块中都对其做了设置。</p>
+<h3 id="module-children"><a href="#module-children" class="headerlink" title="module.children"></a>module.children</h3><ul>
+<li>\<array></array></li>
+</ul>
+<p>该模块所需的对象</p>
+<p>###module.exports</p>
+<ul>
+<li>\<object></object></li>
+</ul>
+<p><code>module.exports</code>对象通过模块系统创建。有时候它也是不被接受的。<br>你可能想将模块定义为一个类的对象,你可以这么做,用<code>module.exports</code>来导出你希望使用的对象。<br>注意,为<code>exports</code>分配你希望导出的对象会简单的重新绑定本地<code>export</code>变量,可能这并不是你想要的。</p>
+<p>比如,假设我们写了这样一个文件<code>a.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const EventEmitter = require(&apos;events&apos;);</div><div class="line"></div><div class="line">module.exports = new EventEmitter();</div><div class="line"></div><div class="line">// Do some work, and after some time emit</div><div class="line">// the &apos;ready&apos; event from the module itself.</div><div class="line">setTimeout(() =&gt; &#123;</div><div class="line">  module.exports.emit(&apos;ready&apos;);</div><div class="line">&#125;, 1000);</div></pre></td></tr></table></figure>
+<p>另外一个文件可以这么干</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const a = require(&apos;./a&apos;);</div><div class="line">a.on(&apos;ready&apos;, () =&gt; &#123;</div><div class="line">  console.log(&apos;module a is ready&apos;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>注意:分配<code>module.exports</code>会立即执行,但是像下面这么干,是不能得到你想要的结果滴。</p>
+<p>x.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">setTimeout(() =&gt; &#123;</div><div class="line">  module.exports = &#123; a: &apos;hello&apos; &#125;;</div><div class="line">&#125;, 0);</div></pre></td></tr></table></figure>
+<p>y.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const x = require(&apos;./x&apos;);</div><div class="line">console.log(x.a);</div></pre></td></tr></table></figure>
+<p>###导出化名</p>
+<p>在模块开始的时候,<code>exports</code>作为<code>module.exports</code>的引用是可用的。就想其他的变量一样,如果分配了一个新的值,它将不会再绑定到以前的值。</p>
+<p>请看下面的代码,简单的阐述了一下<code>require()</code>的实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function require(...) &#123;</div><div class="line">  // ...</div><div class="line">  ((module, exports) =&gt; &#123;</div><div class="line">    // Your module code here</div><div class="line">    exports = some_func;        // re-assigns exports, exports is no longer</div><div class="line">                                // a shortcut, and nothing is exported.</div><div class="line">    module.exports = some_func; // makes your module export 0</div><div class="line">  &#125;)(module, module.exports);</div><div class="line">  return module;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>exports</code>和<code>module.exports</code>的关系就像互相镜像,你可以忽略<code>exports</code>仅使用<code>module.exports</code>。</p>
+<p>###module.filename</p>
+<ul>
+<li>\<string></string></li>
+</ul>
+<p>模块的全名</p>
+<p>###module.id</p>
+<ul>
+<li>\<string><br>模块标识,通常这是模块的全名</string></li>
+</ul>
+<p>###module.loaded</p>
+<ul>
+<li>\<boolean></boolean></li>
+</ul>
+<p>是否模块完成了加载,还是正在加载中。</p>
+<p>###module.parent</p>
+<ul>
+<li>\<object> Module对象</object></li>
+</ul>
+<p>第一次请求该模块的对象</p>
+<h3 id="module-require-id"><a href="#module-require-id" class="headerlink" title="module.require(id)"></a>module.require(id)</h3><ul>
+<li>id\<string></string></li>
+<li>Return:\<object> <code>module.exports</code> 解析之后的模块</object></li>
+</ul>
+<p><code>module.require</code>提供了加载模块的方法,就像使用<code>require()</code>一样。</p>
+<p>注意,想要做到这点,你必须获取该<code>module</code>对象的引用,由于<code>require()</code>返回<code>module.exports</code>,<br>并且,<code>module</code>仅在指定模块代码中可用,它必须被明确的导出。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Modules/" data-id="ciq0b4oqi0007fgfyr5lh8ue1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Process" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Process/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-process"><a href="#title-process" class="headerlink" title="title:process"></a>title:process</h2><p>#process</p>
+<p>##process.nextTick(callback[,arg][,…])</p>
+<ul>
+<li>callback \<function></function></li>
+<li>[,arg][,…] \<any> 调用callback时传递的额外参数</any></li>
+</ul>
+<p><code>process.nextTick()</code>添加<code>callback</code>到 ‘next tick队列’。一旦当前时间循环转完,所有’next tick 队列’中的回调函数都将被执行。</p>
+<p>它不是setTimeout(fn,0)的简单别名,它更有效。在随后的时间循环中它运行在所有I/O事件之前(包括timer)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;start&apos;);</div><div class="line">process.nextTick(() =&gt; &#123;</div><div class="line">  console.log(&apos;nextTick callback&apos;);</div><div class="line">&#125;);</div><div class="line">console.log(&apos;scheduled&apos;);</div><div class="line">// Output:</div><div class="line">// start</div><div class="line">// scheduled</div><div class="line">// nextTick callback</div></pre></td></tr></table></figure>
+<p>在I/O发生之前,一个对象被创建之后,使用该API让用户来分配事件处理,是非常重要的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">function MyThing(options) &#123;</div><div class="line">  this.setupOptions(options);</div><div class="line"></div><div class="line">  process.nextTick(() =&gt; &#123;</div><div class="line">    this.startDoingStuff();</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">var thing = new MyThing();</div><div class="line">thing.getReadyForStuff();</div><div class="line"></div><div class="line">// thing.startDoingStuff() 将会在这里执行,而不是在创建对象的时候执行。</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>API将100%同步还是100%异步是非常重要的。看以下例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 警告!不要这么干!这是非常不安全的!</div><div class="line"></div><div class="line">function maybeSync(arg, cb) &#123;</div><div class="line">  if (arg) &#123;</div><div class="line">    cb();</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  fs.stat(&apos;file&apos;, cb);</div><div class="line">&#125;</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>该API在下面的情况下会非常危险:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">maybeSync(true, () =&gt; &#123;</div><div class="line">  foo();</div><div class="line">&#125;);</div><div class="line">bar();</div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>你搞不清楚foo()和bar()哪个会先执行。</p>
+<p>下面的方法就好多了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">function definitelyAsync(arg, cb) &#123;</div><div class="line">  if (arg) &#123;</div><div class="line">    process.nextTick(cb);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  fs.stat(&apos;file&apos;, cb);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">`</div></pre></td></tr></table></figure>
+<p>注意:I/O被处理之前,每次通过时间循环都会将’next tick queue’中的方法全部执行完。结果,递归调用nextTick将在开始就阻断所有I/O,<br>像<code>while(true);</code>循环一样。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Process/" data-id="ciq0b4oqk0008fgfy1nnmt39m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -144,6 +946,10 @@
 
   
 
+
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/nodejs6_cn/page/2/">2</a><a class="extend next" rel="next" href="/nodejs6_cn/page/2/">__('next') &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -173,11 +979,23 @@
       <ul>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/myfirst/">this is my first</a>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
           </li>
         
           <li>
-            <a href="/nodejs6_cn/2016/06/29/hello-world/">Hello World</a>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
           </li>
         
       </ul>

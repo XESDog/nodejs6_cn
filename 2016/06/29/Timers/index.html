@@ -3,21 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | Nodejs6_API_CN</title>
+  <title>Nodejs6_API_CN</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+  <meta name="description" content="title:Timers#Timers
+所有timer的方法都是全局的。你不必使用require()就能使用它们。
+##clearImmediate(immediateObject)停止一个immediateObject,该对象通过setImmediate创建。
+##clearInterval(intervalObject)停止一个intervalObject,该对象通过setInterval创">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/hello-world/index.html">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Timers/index.html">
 <meta property="og:site_name" content="Nodejs6_API_CN">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2016-06-29T02:19:42.000Z">
+<meta property="og:description" content="title:Timers#Timers
+所有timer的方法都是全局的。你不必使用require()就能使用它们。
+##clearImmediate(immediateObject)停止一个immediateObject,该对象通过setImmediate创建。
+##clearInterval(intervalObject)停止一个intervalObject,该对象通过setInterval创">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:Timers#Timers
+所有timer的方法都是全局的。你不必使用require()就能使用它们。
+##clearImmediate(immediateObject)停止一个immediateObject,该对象通过setImmediate创建。
+##clearInterval(intervalObject)停止一个intervalObject,该对象通过setInterval创">
   
     <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
   
@@ -66,42 +72,38 @@ Quick">
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Timers" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/nodejs6_cn/2016/06/29/hello-world/" class="article-date">
-  <time datetime="2016-06-29T02:19:42.000Z" itemprop="datePublished">2016-06-29</time>
+    <a href="/nodejs6_cn/2016/06/29/Timers/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      Hello World
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <hr>
+<h2 id="title-Timers"><a href="#title-Timers" class="headerlink" title="title:Timers"></a>title:Timers</h2><p>#Timers</p>
+<p>所有timer的方法都是全局的。你不必使用<code>require()</code>就能使用它们。</p>
+<p>##clearImmediate(immediateObject)<br>停止一个<code>immediateObject</code>,该对象通过<code>setImmediate</code>创建。</p>
+<p>##clearInterval(intervalObject)<br>停止一个<code>intervalObject</code>,该对象通过<code>setInterval</code>创建。</p>
+<p>##clearTimeout(timeoutObject)<br>阻止一个<code>timeoutObject</code>,该对象通过<code>setTimeout</code>创建。</p>
+<p>##ref()<br>如果此前执行过unref(),此时ref()被调用来明确请求timer保持程序打开。如果已经执行了<code>ref</code>,再次执行不会有任何效果。</p>
+<p>##setImmediate(callback[,arg][,…])<br>I/O事件调用之前和timer通过setTimeout和setInterval触发之后,安排一个’立即’执行回调。<br>返回一个immediateObject,后期可能会被clearImmediate使用。额外的可选参数也可能被传递到回调函数中。</p>
+<p>立即执行的回调函数根据他们被创建的顺序,被存放在一个队列中。<br>在每个循环迭代中所有的回调队列都要被处理。<br>如果一个新的<code>immediate</code>在执行回调的时候被添加到队列,那么在下一个loop之前,它是不会被执行的。</p>
+<p>如果callback不是一个function,setImmediate()将立刻抛出异常。</p>
+<p>##setInterval(callback,delay[,arg][,…])</p>
+<p>安排一个每delay毫秒执行一次的callback。返回一个intervalObject,该对象在clearInterval()的时候回被使用。<br>额外的可选项会被添加到callback中。</p>
+<p>如果callback不是方法,setInterval()将立刻抛出异常。</p>
+<p>##setTimeout(callback,delay[,arg][,…])</p>
+<p>安排一个delay毫秒之后执行一次的callback。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/hello-world/" data-id="ciq098c86000067o5kix27unt" class="article-share-link">Share</a>
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Timers/" data-id="ciq0b4oqm000afgfy2t5rv9st" class="article-share-link">Share</a>
       
       
     </footer>
@@ -110,7 +112,7 @@ Quick">
     
 <nav id="article-nav">
   
-    <a href="/nodejs6_cn/2016/06/29/Readline/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/nodejs6_cn/2016/06/29/Http/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
@@ -119,6 +121,11 @@ Quick">
       </div>
     </a>
   
+  
+    <a href="/nodejs6_cn/2016/06/29/Buffer/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
   
 </nav>
 

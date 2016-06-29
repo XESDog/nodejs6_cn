@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:Buffer#Buffer
+Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
+
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Buffer/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:Buffer#Buffer
+Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
+
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:Buffer#Buffer
+Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
+
+第一个参数传递number(e.g. new Buffer(10)),创建一个参数指定尺寸的Buffer对象。Buffer实例内存">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Buffer/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Buffer"><a href="#title-Buffer" class="headerlink" title="title:Buffer"></a>title:Buffer</h2><p>#Buffer</p>
+<h2 id="Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe"><a href="#Buffer-from-Buffer-alloc-and-Buffer-allocUnsafe" class="headerlink" title="Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()"></a>Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()</h2><p>nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：</p>
+<ul>
+<li><p>第一个参数传递number(e.g. <code>new Buffer(10)</code>),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,<br>必须手动使用buf.fill(0)或直接写Buffer来完成初始化。虽然这么做是希望能够提升效率,但是经验告诉我们,我们必须明确<br>我们需要的是一个快而未初始化的创建方式,还是慢而安全的创建方式。</p>
+</li>
+<li><p>第一个参数如果传递的是string,array或者Buffer,那么,将copy参数的数据到Buffer中。</p>
+</li>
+<li><p>如果传递一个ArrayBuffer对象,那么返回的Buffer对象将和该对象共享内存。</p>
+</li>
+</ul>
+<p>使用<code>new Buffer()</code>第一个参数有多种可能性,如果没有正确验证参数,以及不恰当分配Buffer内容,都将导致代码出现安全问题。<br>使用<code>Buffer</code>创建对象更加可靠也更不容易出错,所以,不赞成使用<code>new Buffer()</code>的方式创建Buffer对象,可以用<code>Buffer.from()</code>,<br><code>Buffer.alloc()</code>和<code>Buffer.allocUnsave()</code>方法代替。</p>
+<p>开发者可以将<code>new Buffer()</code>创建对象的方式使用一下方式代替。</p>
+<ul>
+<li><code>Buffer.from(array)</code>,返回一个新的Buffer对象,该对象复制<code>array</code>中的对象。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Buffer.from([1,2,3]);//&lt;Buffer 01 02 03&gt;</div><div class="line"></div><div class="line">//使用英文和字符,不能够正确输出</div><div class="line">Buffer.from([&apos;a&apos;,&apos;b&apos;,&apos;c&apos;]);//&lt;Buffer 00 00 00&gt;</div><div class="line">Buffer.from([&apos;你&apos;,&apos;好&apos;,&apos;啊&apos;]);//&lt;Buffer 00 00 00&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li><p><code>Buffer.from(arrayBuffer[, byteOffset [, length]])</code>,返回一个新的Buffer对象,该对象和提供的ArrayBuffer对象共享内存</p>
+</li>
+<li><p><code>Buffer.from(buffer)</code>,返回一个新的Buffer对象,该对象复制了参数<code>buffer</code>的内容。</p>
+</li>
+<li><p><code>Buffer.from(str[, encoding])</code>,返回一个新的Buffer对象,该对象复制了参数<code>str</code>。</p>
+</li>
+<li><p><code>Buffer.alloc(size[, fill[, encoding]])</code>,返回一个按照给定<code>size</code>填充之后的Buffer对象,该方法明显慢于<code>Buffer.allocUnsafe(size)</code>,<br>但是,通过该方法获取到的Buffer对象肯定不会保护敏感数据和旧数据。</p>
+</li>
+<li><p><code>Buffer.allocUnsafe(size)</code>and<code>Buffer.allocUnsafeSlow(size)</code>均能够返回一个指定<code>size</code>的Buffer对象,该Buffer对象<br>必须使用<code>buf.fill(0)</code>或手动写入数据来初始化。</p>
+</li>
+</ul>
+<p>使用<code>Buffer.allocUnsafe(size)</code>创建Buffer对象的时候,如果<code>size</code>小于或者等于<code>Buffer.poolSize</code>的一半,<br>那么,该对象将有可能分配到一个共享内存池(译者:被使用过,然后回收的内存)</p>
+<h3 id="The-–zero-fill-buffers-command-line-option"><a href="#The-–zero-fill-buffers-command-line-option" class="headerlink" title="The –zero-fill-buffers command line option"></a>The –zero-fill-buffers command line option</h3><p>Node.js使用<code>--zero-fill-buffers</code>命令行参数,能够强制所有通过<code>new Buffer(size)</code>,<code>Buffer.allocUnsafe(size)</code>,<br><code>Buffer.allocUnsafeSlow(size)</code>,<code>new SlowBuffer(size)</code>创建的Buffer对象自动填充0,该命令参数能够改变这些方法的默认行为,<br>这对于性能有显著的影响。推荐使用<code>zero-fill-buffers</code>命令行参数,该命令行参数可以杜绝Buffer对象包含敏感数据的可能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ node --zero-fill-buffers</div><div class="line">&gt; Buffer.allocUnsafe(5);</div><div class="line">&lt;Buffer 00 00 00 00 00&gt;</div></pre></td></tr></table></figure>
+<h3 id="是什么导致Buffer-allocUnsafe-size-和Buffer-allocUnsafeSlow-size-“不安全”"><a href="#是什么导致Buffer-allocUnsafe-size-和Buffer-allocUnsafeSlow-size-“不安全”" class="headerlink" title="是什么导致Buffer.allocUnsafe(size)和Buffer.allocUnsafeSlow(size) “不安全”?"></a>是什么导致<code>Buffer.allocUnsafe(size)</code>和<code>Buffer.allocUnsafeSlow(size)</code> “不安全”?</h3><p>当调用<code>Buffer.allocUnsafe()</code>(和<code>Buffer.allocUnsafeSlow()</code>)创建Buffer对象时,分配到的内存并没有被初始化(归零),<br>这种设计会使得分配内存相当快,同时,也导致会有一些老的数据和敏感数据,如果在创建之后也没有在该内存上写入新的数据,那么,当读取该Buffer对象<br>的时候就有可能导致信息泄露。</p>
+<p>你已经知道<code>Buffer.allocUnsafe()</code>会导致的问题,那么在使用的时候就得非常小心,避免出现安全问题。</p>
+<h2 id="Buffers和字符编码"><a href="#Buffers和字符编码" class="headerlink" title="Buffers和字符编码"></a>Buffers和字符编码</h2><p>Buffers通常用来呈现一堆编译过的字符,这些字符可能使用了UTF8,UCS2,Base64甚至16进制编码。而且,通过一些方法,它们会在Buffers和普通的<br>JavaScript字符串对象间来回转换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const buf = Buffer.from(&apos;hello world&apos;, &apos;ascii&apos;);</div><div class="line">console.log(buf.toString(&apos;hex&apos;));</div><div class="line">  // prints: 68656c6c6f20776f726c64</div><div class="line">console.log(buf.toString(&apos;base64&apos;));</div><div class="line">  // prints: aGVsbG8gd29ybGQ=</div></pre></td></tr></table></figure>
+<p>当前,Node.js支持的字符编码有:</p>
+<ul>
+<li><code>ascii</code></li>
+<li><code>utf8</code></li>
+<li><code>utf16le</code></li>
+<li><code>ucs2</code> - <code>utf16le</code>的别名</li>
+<li><code>base64</code></li>
+<li><code>binary</code></li>
+<li><code>hex</code></li>
+</ul>
+<h2 id="Buffers-和-TypedArray"><a href="#Buffers-和-TypedArray" class="headerlink" title="Buffers 和 TypedArray"></a>Buffers 和 TypedArray</h2><p>Buffer对象就是<code>Uint8Array</code>的实例,<code>Unit8Array</code>是TypeArray的一个实现。在ECMAScript2015中,它们和TypedArray有点小小的不兼容。<br>比如,<code>ArrayBuffer#slice()</code>创建一个切片副本,<code>Buffer#slice</code>创建一个针对现有Buffer的一个视图,而不是副本,<code>Buffer#slice()</code>更有效率。</p>
+<p>你通过使用一个Buffer对象来生成数据的时候,需要注意这些问题:</p>
+<ol>
+<li>这个Buffer对象的内存数据被copy到TypedArray中,不是共享。</li>
+<li>使用<code>new Uint32Array(Buffer.from([1,2,3,4]))</code>将创建一个由4各元素组成的<code>Uint32Array</code>,而不是1个元素组成的<code>Uint32Array</code>,<br>不是<code>[0x1020304]</code>,也不是<code>[0x4030201]</code></li>
+</ol>
+<p>你可以使用TypedArray的.buffer属性,来创建一个和TypedArray共享内存块的Buffer对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">const arr = new Uint16Array(2);</div><div class="line">arr[0] = 5000;</div><div class="line">arr[1] = 4000;</div><div class="line"></div><div class="line">const buf1 = Buffer.from(arr); // copies the buffer</div><div class="line">const buf2 = Buffer.from(arr.buffer); // shares the memory with arr;</div><div class="line"></div><div class="line">console.log(buf1);</div><div class="line">  // Prints: &lt;Buffer 88 a0&gt;, copied buffer has only two elements</div><div class="line">console.log(buf2);</div><div class="line">  // Prints: &lt;Buffer 88 13 a0 0f&gt;</div><div class="line"></div><div class="line">arr[1] = 6000;</div><div class="line">console.log(buf1);</div><div class="line">  // Prints: &lt;Buffer 88 a0&gt;</div><div class="line">console.log(buf2);</div><div class="line">  // Prints: &lt;Buffer 88 13 70 17&gt;</div></pre></td></tr></table></figure>
+<p>注意,当把一个TypedArray对象的buffer属性作为一个参数来创建Buffer对象的时候,可以通过<code>byteOffset</code><br>和<code>length</code>参数来指定使用部分数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const arr = new Uint16Array(20);</div><div class="line">const buf = Buffer.from(arr.buffer, 0, 16);</div><div class="line">console.log(buf.length);</div><div class="line">  // Prints: 16</div></pre></td></tr></table></figure>
+<p><code>Buffer.from()</code> 和 <code>TypedArray.from()</code> (e.g.Uint8Array.from())`具有不同的签名和实现。具体的说,<br>TypedArray可以接受一个mapping函数作为第二个参数,该函数会将数组中的每个元素作为参数执行一次。</p>
+<ul>
+<li><code>TypedArray.from(source[, mapFn[, thisArg]])</code><br><code>Buffer.from()</code>,不支持使用mapping函数:</li>
+<li><code>Buffer.from(array)</code></li>
+<li><code>Buffer.from(buffer)</code></li>
+<li><code>Buffer.from(arrayBuffer[, byteOffset [, length]])</code></li>
+<li><code>Buffer.from(str[, encoding])</code></li>
+</ul>
+<p>##Buffer和ES6迭代器</p>
+<p>ECMAScript2015(ES6)中,Buffer能够使用<code>for..of</code>来迭代:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const buf = Buffer.from([1, 2, 3]);</div><div class="line"></div><div class="line">for (var b of buf)</div><div class="line">  console.log(b)</div><div class="line"></div><div class="line">// Prints:</div><div class="line">//   1</div><div class="line">//   2</div><div class="line">//   3</div></pre></td></tr></table></figure>
+<p>另外,<code>buf.values()</code>,<code>buf.keys()</code>,<code>buf.entries()</code>能够用来创建迭代器。</p>
+<h2 id="Buffer类"><a href="#Buffer类" class="headerlink" title="Buffer类"></a>Buffer类</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Buffer/" data-id="ciq0b4oq70001fgfy61puthxd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/Timers/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>

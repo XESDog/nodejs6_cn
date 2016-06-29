@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:Child Process#Child Process
+[TOC]
+child_process能够以一种近似但不同于popen(3)的方式来生成子进程,该功能主要由child_process.spawn()提供。
+译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.管道定义为单向的,参数type表明是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/ChildProcesses/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:Child Process#Child Process
+[TOC]
+child_process能够以一种近似但不同于popen(3)的方式来生成子进程,该功能主要由child_process.spawn()提供。
+译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.管道定义为单向的,参数type表明是">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:Child Process#Child Process
+[TOC]
+child_process能够以一种近似但不同于popen(3)的方式来生成子进程,该功能主要由child_process.spawn()提供。
+译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.管道定义为单向的,参数type表明是">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ChildProcesses" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Child-Process"><a href="#title-Child-Process" class="headerlink" title="title:Child Process"></a>title:Child Process</h2><p>#Child Process</p>
+<p>[TOC]</p>
+<p><code>child_process</code>能够以一种近似但不同于<a href="http://man7.org/linux/man-pages/man3/popen.3.html" target="_blank" rel="external">popen(3)</a>的方式来生成子进程,<br>该功能主要由<code>child_process.spawn()</code>提供。</p>
+<p>译者:popen(3)是linux中的命令。popen通过创建一个管道,forking,以及invoking shell来打开一个进程.<br>管道定义为单向的,参数type表明是读还是写,不能两者兼有。响应的产生的流也是只读或者只写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const spawn = require(&apos;child_process&apos;).spawn;</div><div class="line">const ls = spawn(&apos;ls&apos;, [&apos;-lh&apos;, &apos;/usr&apos;]);</div><div class="line"></div><div class="line">ls.stdout.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(`stdout: $&#123;data&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">ls.stderr.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(`stderr: $&#123;data&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">ls.on(&apos;close&apos;, (code) =&gt; &#123;</div><div class="line">  console.log(`child process exited with code $&#123;code&#125;`);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>默认,<code>stdin</code>,<code>stdout</code>,<code>stderr</code>管道在父Node.js进程和生成的子进程之间建立。它能够通过一种无阻塞的方法传输数据。注意,<br>一些程序使用内部的 line-bufferedI/O。然而这并不影响Node.js,它意味着发送给子进程的数据不会立即销毁。</p>
+<p><code>child_process.spawn()</code>方法生成异步子进程,不会阻断Node.js事件循环。<br><code>child_process.spawnSync()</code>方法提供一个一样的方法,只不过该方法是同步的,它能够阻断事件循环,直到生成的进程退出或者被终止。</p>
+<p>为了方便,<code>child_process</code>模块提供少量的同步和异步方法来替代<code>child_process.spawn()</code>和<code>child_process.spawnSync()</code>。<br>注意它们的每个替代方法都是在<code>child_process.spawn()</code>和<code>child_process.spawnSync()</code>基础上实现的。</p>
+<ul>
+<li><code>child_process.exec()</code>:生成一个shell并在该shell中运行一个命令,执行完成时传递<code>stdout</code>和<code>stderr</code>给回调函数。</li>
+<li><code>child_process.execFile()</code>:类似<code>child_process.exec()</code>,区别在它在没有首先生成一个shell而是直接生成命令。</li>
+<li><code>child_process.fork()</code>:生成一个新的Node.js进程,并调用指定模块与IPC通信信道建立允许父级和子级之间发送信息。</li>
+<li><code>child_process.execSync()</code>:同步版的<code>child_process.exec()</code>,将会阻断Node.js事件循环。</li>
+<li><code>child_process.execFileSync()</code>:同步版的<code>child_process.execFile()</code>,将会阻断Node.js事件循环。</li>
+</ul>
+<p>在某些使用情况,像自动执行shell脚本,同步执行可能更加方便。大多数情况,当生成进程完成时,同步方法阻塞事件循环会对性能产生巨大影响。</p>
+<h2 id="异步进程创建"><a href="#异步进程创建" class="headerlink" title="异步进程创建"></a>异步进程创建</h2><p><code>child_process.spawn()</code> <code>child_process.fork</code> <code>child_process.exec()</code> <code>child_process.exeFile()</code> 这些方法跟其他Node.js API一样,符合典型的异步编程模式。</p>
+<p>每个方法返回一个<code>ChildProcess</code>实例。该对象实现Node.js <code>EventEmitter</code> API。允许父进程注册侦听方法,当某个事件在子进程生命周期触发的时候执行。</p>
+<p><code>child_process.exec()</code> <code>child_process.execFile()</code>方法允许指定一个明确的<code>callback</code>方法,当子进程终止的时候执行。</p>
+<h3 id="Windows中生成-bat-和-cmd文件"><a href="#Windows中生成-bat-和-cmd文件" class="headerlink" title="Windows中生成 .bat 和 .cmd文件"></a>Windows中生成 <code>.bat</code> 和 <code>.cmd</code>文件</h3><p><code>child_process.exec()</code>和<code>child_proces.execFile()</code>的重要区别是基于平台的改变。在Unix类型的操作系统<code>child_process.exeFile()</code>更有效率,<br>因为它没有生成shell。在Windows平台,<code>.bat</code>和<code>.cmd</code>文件不能有在没有终端的情况下执行,因此使用<code>child_process.execFile()</code>将不能被执行,通常使用<br><code>child_process.spawn()</code>加上<code>shell</code> option设置,使用<code>child_process.exec()</code>,或者生成<code>cmd.exe</code>并传递<code>.bat</code> <code>.cmd</code>文件和参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// On Windows Only ...</div><div class="line">const spawn = require(&apos;child_process&apos;).spawn;</div><div class="line">const bat = spawn(&apos;cmd.exe&apos;, [&apos;/c&apos;, &apos;my.bat&apos;]);</div><div class="line"></div><div class="line">bat.stdout.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">bat.stderr.on(&apos;data&apos;, (data) =&gt; &#123;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">bat.on(&apos;exit&apos;, (code) =&gt; &#123;</div><div class="line">  console.log(`Child exited with code $&#123;code&#125;`);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// OR...</div><div class="line">const exec = require(&apos;child_process&apos;).exec;</div><div class="line">exec(&apos;my.bat&apos;, (err, stdout, stderr) =&gt; &#123;</div><div class="line">  if (err) &#123;</div><div class="line">    console.error(err);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line">  console.log(stdout);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>###child_process.exec(command[,option][,callback])</p>
+<ul>
+<li>command \<string> 运行的命令,参数使用空格分开</string></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>encoding</code> \<string> 默认为<code>utf8</code></string></li>
+<li><code>shell</code> \<string> 要执行的命令(默认:UNIX下为<code>/bin/sh</code>,Windows下为<code>cmd.exe</code>)</string></li>
+<li><code>timeout</code> \<number> 默认为0</number></li>
+<li><code>maxBuffer</code> \<number> 允许stdout或stderr的最大数据量(单位:byte),超出的部分将被kill(默认:200*1024)</number></li>
+<li><code>killSIgnal</code> \<string> (默认:<code>SIGTERM</code>)</string></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p>当执行的命令在shell里面的时候生成一个shell,缓存任何生成的输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const exec = require(&apos;child_process&apos;).exec;</div><div class="line">exec(&apos;cat *.js bad_file | wc -l&apos;, (error, stdout, stderr) =&gt; &#123;</div><div class="line">  if (error) &#123;</div><div class="line">    console.error(`exec error: $&#123;error&#125;`);</div><div class="line">    return;</div><div class="line">  &#125;</div><div class="line">  console.log(`stdout: $&#123;stdout&#125;`);</div><div class="line">  console.log(`stderr: $&#123;stderr&#125;`);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>如果提供了callback。它将和参数(error,stdout,stderr)一起执行。执行成功error将为null。如果错误,error将是一个Error对象。<br>error.code属性为子进程的退出码,而error.signal将被设置为终止进程的信号。任何非0得退出码都将被认为是错误。</p>
+<p>传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。<br>encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是<code>buffer</code>,一个Buffer对象将被传递到callback。</p>
+<p>options参数作为第二个参数,用来定义如何生成进程。默认选项为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  encoding: &apos;utf8&apos;,</div><div class="line">  timeout: 0,</div><div class="line">  maxBuffer: 200*1024,</div><div class="line">  killSignal: &apos;SIGTERM&apos;,</div><div class="line">  cwd: null,</div><div class="line">  env: null</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果设置timeout大于0,单子进程运行超过timeout毫秒之后,父进程将发送<code>killSignal</code>属性的信号标识(默认为<code>SIGTERM</code>)。</p>
+<p>注意:不像POSIX系统调用,<code>child_process.exec()</code>没有代替已经存在的进程,而是使用一个shell来执行命令。</p>
+<h3 id="child-process-execFile-file-arg-options-callback"><a href="#child-process-execFile-file-arg-options-callback" class="headerlink" title="child_process.execFile(file[,arg][,options][,callback])"></a>child_process.execFile(file[,arg][,options][,callback])</h3><ul>
+<li>file \<string> 可执行文件的名称,或运行的地址</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>encoding</code> \<string> 默认为<code>utf8</code></string></li>
+<li><code>shell</code> \<string> 要执行的命令(默认:UNIX下为<code>/bin/sh</code>,Windows下为<code>cmd.exe</code>)</string></li>
+<li><code>timeout</code> \<number> 默认为0</number></li>
+<li><code>maxBuffer</code> \<number> 允许stdout或stderr的最大数据量(单位:byte),超出的部分将被kill(默认:200*1024)</number></li>
+<li><code>killSIgnal</code> \<string> (默认:<code>SIGTERM</code>)</string></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p>child_process.execFile()方法类似child_process.exec(),区别在它不生成一个shell。当然,指定的可执行文件像一个新进程被直接生成,<br>使得相比child_process.exec()更加有效率一点。</p>
+<p>同样也支持options参数。由于没有生成一个shell,一些行为像I/O重定向以及文件通配符都不被支持。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const execFile = require(&apos;child_process&apos;).execFile;</div><div class="line">const child = execFile(&apos;node&apos;, [&apos;--version&apos;], (error, stdout, stderr) =&gt; &#123;</div><div class="line">  if (error) &#123;</div><div class="line">    throw error;</div><div class="line">  &#125;</div><div class="line">  console.log(stdout);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>传递给callback的参数stdout和stderr将包括子进程的stdout和stderr。默认,Node.js将以utf8的方式解码输出并传递给callback。<br>encoding选项被用来指定解码stdout和stderr输出的字符编码。如果encoding是<code>buffer</code>,一个Buffer对象将被传递到callback。</p>
+<p>###child_process.fork(modulePath[,arg][,options])</p>
+<ul>
+<li>modulePath \<string> 该模版在子进程中运行</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li><code>cwd</code> \<string> 子进程当前工作目录</string></li>
+<li><code>env</code> \<object> 环境变量的键值对</object></li>
+<li><code>execPath</code> \<string> 用来创建可执行的子进程</string></li>
+<li><code>execArgv</code> \<array> 传递给可执行子进程的string参数列表(默认:process.execArgv)</array></li>
+<li><code>silent</code> \<boolean> 如果为true,stdin,stdout,stderr将建立子进程到父进程的管道,否则将从父进程继承,<br>参考child_process.spawn()的<code>stdio</code>的<code>pipe</code>和<code>inherit</code>参数来了解更多(默认:false)</boolean></li>
+<li><code>uid</code> \<number> 设置进程的用户标识</number></li>
+<li><code>gid</code> \<number> 设置进程的组标识</number></li>
+</ul>
+</object></li>
+<li>callback \<function> 当进程终止时被执行并输出<ul>
+<li>error \<error></error></li>
+<li>stdout \<string>|\<buffer></buffer></string></li>
+<li>stderr \<string>|\<buffer></buffer></string></li>
+</ul>
+</function></li>
+<li>Return:\<childprocess></childprocess></li>
+</ul>
+<p><code>child_process.fork()</code>方法是<code>child_process.spawn()</code>的一个特殊情况,用来明确的创建一个新的Node.js进程。<br><code>child_process.spawn()</code>将返回一个ChildProcess对象。该返回对象将构建子和父之间的双向通信信道。查看<code>child.send()</code>了解更多。</p>
+<p>需要记住,生成Node.js子进程不依赖父进程,除非IPC通信信道简历在两者之间。每个进程有其自己的内存,和他们自己的V8实例。<br>由于额外的资源分配请求,不推荐生成多个Node.js子进程。</p>
+<p>默认,child_process.fork()将生成新的Node.js实例,使用父进程的process.execPath。options里面的execPath属性允许使用另外的执行路径。</p>
+<p>通过自定义execPath执行得到的Node.js进程,将和父进程使用子进程的环境变量NODE_CHANNEL_FD定义的标识进行通讯。<br>fd上的输入和输出被期望行分(line delimited)JSON对象。</p>
+<p>注意:不同于fork POSIX 系统调用,child_process.fork()不clone当前进程。</p>
+<p>###child_process.spawn(command,[,arg][,options])</p>
+<ul>
+<li>command \<string> 运行的命令</string></li>
+<li>args \<array> string参数列表</array></li>
+<li>options \<object><ul>
+<li>cwd \<string> 当前子进程的工作目录</string></li>
+<li>env \<object> 环境变量的键值对</object></li>
+<li>stdio \<array> | \<string> 子进程的 stdio 配置. (See options.stdio)</string></array></li>
+<li>detached \<boolean> 预备将子进程独立于父进程运行. 具体行为区别于平台, (see options.detached)</boolean></li>
+<li>uid \<number> 设置进程的用户标识 (See setuid(2).)</number></li>
+<li>gid \<number> 设置进程的组标识 (See setgid(2).)</number></li>
+<li>shell \<boolean> | \<string> 如果为true,在shell中运行命令,UNIX使用<code>/bin/sh</code>,Windows使用<code>cmd.exe</code>。<br>一个不同的shell使用字符串来指定。shell应该明白UNIX中的-c,或Windows中的/s /c。默认为false(没有shell)</string></boolean></li>
+</ul>
+</object></li>
+<li>return:\<childprocess></childprocess></li>
+</ul>
+<p>child_process.spawn()方法使用提供的命令生成一个新的进程,参数在args中指出。如果忽略,args默认为空数组。</p>
+<p>第三个参数被用来指定额外的选项,默认为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    cwd:undefined,</div><div class="line">    env:process.env</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用cwd指定工作目录</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/ChildProcesses/" data-id="ciq0b4oqa0002fgfyx9idju70" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/Buffer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/Console/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>

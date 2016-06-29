@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs6_API_CN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:Console#Consoleconsole模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。
+该模块导出两个特殊的组件:
+
+Console类,有这些方法,console.log(),console.error(),console.warn()能够用来写出任何的Node.js流
+
+一个全局的console实例,设定写stdout,stderr。因为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs6_API_CN">
+<meta property="og:url" content="http://xesjiaoyan.github.io/nodejs6_cn/2016/06/29/Console/index.html">
+<meta property="og:site_name" content="Nodejs6_API_CN">
+<meta property="og:description" content="title:Console#Consoleconsole模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。
+该模块导出两个特殊的组件:
+
+Console类,有这些方法,console.log(),console.error(),console.warn()能够用来写出任何的Node.js流
+
+一个全局的console实例,设定写stdout,stderr。因为">
+<meta property="og:updated_time" content="2016-06-29T03:12:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs6_API_CN">
+<meta name="twitter:description" content="title:Console#Consoleconsole模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。
+该模块导出两个特殊的组件:
+
+Console类,有这些方法,console.log(),console.error(),console.warn()能够用来写出任何的Node.js流
+
+一个全局的console实例,设定写stdout,stderr。因为">
+  
+    <link rel="alternate" href="/atom.xml" title="Nodejs6_API_CN" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/nodejs6_cn/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/nodejs6_cn/" id="logo">Nodejs6_API_CN</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/">Home</a>
+        
+          <a class="main-nav-link" href="/nodejs6_cn/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xesjiaoyan.github.io/nodejs6_cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Console" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/nodejs6_cn/2016/06/29/Console/" class="article-date">
+  <time datetime="2016-06-29T03:12:58.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-Console"><a href="#title-Console" class="headerlink" title="title:Console"></a>title:Console</h2><p>#Console<br><code>console</code>模块提供了简单的debug控制台,类似于web浏览器提供的JavaScript控制台。</p>
+<p>该模块导出两个特殊的组件:</p>
+<ul>
+<li><p><code>Console</code>类,有这些方法,<code>console.log()</code>,<code>console.error()</code>,<code>console.warn()</code>能够用来写出任何的Node.js流</p>
+</li>
+<li><p>一个全局的<code>console</code>实例,设定写<code>stdout</code>,<code>stderr</code>。因为对象是全局的,你不必执行<code>require(&#39;console&#39;)</code>。</p>
+</li>
+</ul>
+<p>以下是使用<code>console</code>的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">console.log(&apos;hello world&apos;);</div><div class="line">  // Prints: hello world, to stdout</div><div class="line">console.log(&apos;hello %s&apos;, &apos;world&apos;);</div><div class="line">  // Prints: hello world, to stdout</div><div class="line">console.error(new Error(&apos;Whoops, something bad happened&apos;));</div><div class="line">  // Prints: [Error: Whoops, something bad happened], to stderr</div><div class="line"></div><div class="line">const name = &apos;Will Robinson&apos;;</div><div class="line">console.warn(`Danger $&#123;name&#125;! Danger!`);</div><div class="line">  // Prints: Danger Will Robinson! Danger!, to stderr</div></pre></td></tr></table></figure>
+<p>使用<code>Console</code>类的例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const out = getStreamSomehow();</div><div class="line">const err = getStreamSomehow();</div><div class="line">const myConsole = new console.Console(out, err);</div><div class="line"></div><div class="line">myConsole.log(&apos;hello world&apos;);</div><div class="line">  // Prints: hello world, to out</div><div class="line">myConsole.log(&apos;hello %s&apos;, &apos;world&apos;);</div><div class="line">  // Prints: hello world, to out</div><div class="line">myConsole.error(new Error(&apos;Whoops, something bad happened&apos;));</div><div class="line">  // Prints: [Error: Whoops, something bad happened], to err</div><div class="line"></div><div class="line">const name = &apos;Will Robinson&apos;;</div><div class="line">myConsole.warn(`Danger $&#123;name&#125;! Danger!`);</div><div class="line">  // Prints: Danger Will Robinson! Danger!, to err</div></pre></td></tr></table></figure>
+<p>Console类从根本上是围绕浏览器的console对象设计的,但是,Node.js没打算精确的复制浏览器中console的所有方法。</p>
+<p>##同步 vs 异步 Console</p>
+<p><code>console</code>方法是异步的,除非目标是一个文件。磁盘很快速,并且操作系统通常会使用write-back缓存。大块文件写入是比较罕见的,但是,也不是不可能。</p>
+<p>##<code>Console</code>类</p>
+<p>###new Console(stdout[,stderr])</p>
+<p>###console.assert(value[,messages][,…])</p>
+<p>###console.dir(obj[,options])</p>
+<p>###console.error([data][,…])</p>
+<p>###console.info([data][,…])</p>
+<p>###console.log([data][,…])</p>
+<p>###console.time(label)</p>
+<p>###console.warn([data][,…])</p>
+<p>###console.timeEnd(label)</p>
+<p>###console.trace(message[,…])</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xesjiaoyan.github.io/nodejs6_cn/nodejs6_cn/2016/06/29/Console/" data-id="ciq0b4oqb0003fgfy9044gz4b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/nodejs6_cn/2016/06/29/ChildProcesses/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/nodejs6_cn/2016/06/29/Debugger/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/nodejs6_cn/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Http/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Timers/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Buffer/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/ChildProcesses/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs6_cn/2016/06/29/Console/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Mr.zheng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/nodejs6_cn/" class="mobile-nav-link">Home</a>
+  
+    <a href="/nodejs6_cn/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/nodejs6_cn/fancybox/jquery.fancybox.css">
+  <script src="/nodejs6_cn/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/nodejs6_cn/js/script.js"></script>
+
+  </div>
+</body>
+</html>
