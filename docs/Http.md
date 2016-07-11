@@ -1,10 +1,10 @@
 #Http
 使用Http,必须通过`require('http)`。
 
-Http接口在Node.js中被设计成支持多功能协议,这些协议是以前很难以使用的。
-特别是大的消息数据,该接口非常小心,从不缓冲请求和恢复————用户能够处理数据流。
+Node.js中的Http接口支持很多以前难以使用的特性。
+特别是大的,块编码,消息。该接口非常小心的从不缓冲整个请求/回复————用户能够处理数据流。
 
-Http头信息通过对象的形式呈现如下:
+Http头信息格式如下:
 
 ```
 { 'content-length': '123',
@@ -15,13 +15,16 @@ Http头信息通过对象的形式呈现如下:
 
 ```
 
-key都是小写,value未被修改。(嘛意思?)
+key是小写,value未被修改。
 
-为了能够尽可能多的支持跟多的特性,Node.js的Http API是非常底层的。仅仅处理流和信息解析。
-它解析消息到headers和body中,但是,它不解析实际的headers或body。
+为了能够尽可能多的支持更多的特性,Node.js的Http API是非常底层的。仅仅处理流和消息解析。
+它解析一个消息到header和body中,但它不解析实际的header或body。
 
-我们接收到的未处理的headers,被存在`rawHeaders`属性里面,格式`[key,value,key2,value2,...]`。
-比如:
+关于如何处理重复header,请看[message.headers](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_message_headers)
+
+
+我们接收到的未处理的headers保存在`rawHeaders`属性里面,格式`[key,value,key2,value2,...]`。
+例如,之前的header对象可能有一个`rawHeaders`如下:
 
 ```
 [ 'ConTent-Length', '123456',
@@ -35,17 +38,17 @@ key都是小写,value未被修改。(嘛意思?)
 
 ##http.Agent类
 
-Http Agent被用来管理Http客户端请求的socket。
+`Agent`用于管理Http客户端请求中的socket对象池。
 
-默认情况下Http Agent使用Connection:keep-alive。如果socket处于空闲状态,socket就会被关闭。
-意思是说,Node.js对象池在keep-alive情况下好处多多,即使负载的情况下,也不用开发者通过手动来关闭Http clients。
+默认情况下`Agent`使用`Connection:keep-alive`。如果socket处于空闲状态,socket就会被关闭。
+意思是说,`Node.js`池设为`keep-alive`有很多好处,使用`KeepAlive`即使负载的情况下,也不用开发者通过手动来关闭Http客户端。
 
-如果你选择使用HTTP keepAlive,你能够创建一个Agent对象,并设置`flag`为`true`,该Agent对象保持未使用的socket在对象池中,
-这将明确标记不保持Node.js进程运行。不管怎么样,当你不再使用它的时候明确的`destroy()`是非常好的选择,这时Socket将被关闭。
+如果你选择使用`HTTP keepAlive`,你能够创建一个Agent对象,设置`flag`为`true`。(看[构造函数选项](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_new_agent_options))
+该Agent将未使用的socket存储在池中以便以后使用。
+这将被明确标记以便于不妨碍Node.js进程运行。无论如何,当你不再使用它的时候请执行`destroy()`,这时该socket将被关闭。
 
-
-当socket发送`close`事件或`agentRemove`事件Socket将从agent的对象池中移除。
-也就是说,如果你想保持一个Http请求处于open状态一段时间,并且,不希望该请求待在对象池中,你可以按照下面的做法:
+当socket发送`close`事件或`agentRemove`事件该socket将从agent的池中移除。
+也就是说,如果你想保持一个Http请求处于open状态一段时间,并且,不希望该请求待在池中,你可以按照下面的做法:
 
 ```
 http.get(options, (res) => {
@@ -56,14 +59,14 @@ http.get(options, (res) => {
 
 ```
 
-或者,你可以选择设置`agent:false`来使对象不会被存储到对象池。
+或者,你可以选择设置`agent:false`来使对象不会被存储到池中。
 
 ```
 http.get({
   hostname: 'localhost',
   port: 80,
   path: '/',
-  agent: false  // create a new agent just for this one request
+  agent: false  // 为该请求创建一个新的agent
 }, (res) => {
   // Do stuff with response
 })
@@ -72,16 +75,16 @@ http.get({
 
 ### new Agent([options])
 
-- `options` \<Object\> 设置agent的可配置选项:
+- `options` \<Object\> 设置agent的可配置选项。有以下字段:
 
-   - `keepAlive` \<Boolean\> 保持socket在对象池中,以便未来被其他请求使用,Default=false。
-   - `keepAliveMsecs` \<Integer\> 当使用HTTP KeepAlive,会经常发送TCP KeepAlive数据包来保持活动状态,Default=1000,仅在`keepAlive`
+   - `keepAlive` \<Boolean\> 保持socket在对象池中,以便未来被其他请求使用,默认=`false`。
+   - `keepAliveMsecs` \<Integer\> 当使用`HTTP KeepAlive`的时候将以怎样的频率发送`TCP KeepAlive`数据包来保持活动状态,默认=`1000`,仅在`keepAlive`
    设置为`true`时有用。
-   - `maxSockets` \<Number\> 每台主机允许socket的最大数量。Default=Infinity。
-   - `maxFressSockets` \<Number\> 自由状态下打开的socket最大数量,仅`keepAlive`设置为`true`时有用。
+   - `maxSockets` \<Number\> 每台主机允许socket的最大数量。默认=`Infinity`。
+   - `maxFressSockets` \<Number\> 空闲状态下打开的socket最大数量,仅`keepAlive`设置为`true`时有用。
 
-http.globalAgent用来设置http.request()的默认值。
-想要配置他们,你必须创建你自己的http.Agent对象。
+被`http.request()`使用的`http.globalAgent`,将所有的值设置为各自的默认值。
+想要配置它们,你必须创建你自己的http.Agent对象。
 
 ```
 const http = require('http');
@@ -93,28 +96,28 @@ http.request(options, onResponseCallback);
 
 ### agent.createConnection(options[, callback])
 
-使用Http请求来生成一个socket/stream。
+生成一个被用于HTTP请求的socket/stream。
 
-默认情况下,该方法和`net.createConnection()`是一样的,通常考虑灵活性一般会使用Agent来重写该方法。
+默认情况下,该方法和`net.createConnection()`是一样的,不过通常为了获取较大的灵活性一般会使用Agent来重写该方法。
 
 一个socket/stream可以通过两种方法获得:通过该方法返回,或传递socket/stream给`callback`。
 
-`callback`签名:`(err,stream)`。
+`callback`的方法签名为`(err,stream)`。
 
 ### agent.destroy()
 
 通过agent销毁当前正使用的socket。
 
-通常不必这么做,如果你正在使用agent且KeepAlive=true,当你知道agent不再被使用时,你最好明确的关闭它。否则,服务器结束它们之前,socket将会挂起很长一段时间。
+通常不必这么做,如果你正在使用agent且KeepAlive=`true`,当你知道agent不再被使用时最好直接关闭它。否则,服务器结束它们之前socket将会挂起很长一段时间。
 
 ### agent.freeSockets
 
-当HTTPKeepAlive被使用,一个包含socket数组的对象正等在Agent使用。不可修改。
+当`HTTP KeepAlive`被使用,一个包含socket数组的对象正等待该Agent使用。不要修改。
 
 ### agent.getName(options)
 
 获取一组`options`表示的唯一name,来决定是否连接被重用。在http agent中,返回`host:post:localAddress`。
-在http agent中, CA,cert,ciphers,以及其他HTTPS/TLS-specific选项决定socket的可重用性。
+在https agent中, 名字包括`CA`,`cert`,`ciphers`,以及其他`HTTPS/TLS-specific`选项决定socket的可重用性。
 
 Options:
 - `host`: 请求到某服务器的域名和IP地址
@@ -123,7 +126,7 @@ Options:
 
 ### agent.maxFreeSockets
 
-默认设置为256,Agent支持HTTPKeepAlive时,将该值设置为自由状态下能够打开的最大值。
+默认设置为256,Agent支持`HTTPKeepAlive`时,将该值设置为自由状态下能够打开的最大值。
 
 ### agent.maxSockets
 
@@ -138,9 +141,9 @@ Options:
 
 ## http.ClientRequest 类
 
-该对象通过`http.request()`内部创建并返回。它表示一个header已经进入队列了的正在进行的请求。
-这个header依然可以通过 `setHeader(name,value)`,`getHeader(name)`,`removeHeader(name)`来做修改。
-真是的header将沿着第一个数据块,或者链接关闭的时候发送。
+该对象通过`http.request()`内部创建并返回。它表示一个正在进行中的请求,该请求头已经进入队列。
+这个header依然可以通过 `setHeader(name,value)`,`getHeader(name)`,`removeHeader(name)`API来做修改。
+真是的header将沿着第一个数据块或者链接关闭的时候发送。
 
 要想获取response,添加request对象的`response`侦听事件。`response`事件将在response头信息被收到的时候通过request对象发送。
 `response`事件被执行的``时候带一个`http.IncomingMessage`类型的参数。
