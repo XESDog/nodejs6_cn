@@ -145,16 +145,22 @@ Options:
 这个header依然可以通过 `setHeader(name,value)`,`getHeader(name)`,`removeHeader(name)`API来做修改。
 真是的header将沿着第一个数据块或者链接关闭的时候发送。
 
-要想获取response,添加request对象的`response`侦听事件。`response`事件将在response头信息被收到的时候通过request对象发送。
-`response`事件被执行的``时候带一个`http.IncomingMessage`类型的参数。
+要想获取response,为request对象添加的`response`侦听事件。`response`事件将在response头信息被收到的时候通过request对象发送。
+`response`事件被执行的时候带一个`http.IncomingMessage`类型的参数。
 
-在`response`事件期间,你可以为response对象添加侦听事件,特别是`data`事件。
+在`response`事件期间,你可以为response对象添加侦听事件,特别是侦听`data`事件。
 
 
-如果你侦听了`response`事件,你必须将response对象的数据完全取出。你可以通过 `response.read()`当触发`readable`事件的时候。
-你还可以添加 `data`处理函数,也可以执行`.resume()`方法。知道所有数据都被取出,执行`end`事件。如果有数据没有读取完,将导致内存出错。
+如果没有`response`事件被添加,该response将被完全丢弃。
+不过,如果你添加了`response`事件处理,你必须从response对象中处理这些数据,既可以在`readable`事件时执行`response.read()`,
+也可以添加一个`data`处理,还可以执行`.resume()`方法。
+直到所有数据都被取出之后才会触发`end`事件。如果有数据没有读取完,将导致内存出错。
 
-注意:Node.js不会去检测是否Content-Length以及被发送的body的长度是否相等。
+注意:Node.js不会去检测是否`Content-Length`以及被发送的body的长度是否相等。
+
+该请求实现[Writable Stream](https://nodejs.org/dist/latest-v6.x/docs/api/stream.html#stream_class_stream_writable)
+接口。
+以下是相关事件:
 
 ###Event:'abort'
 `function (){}`
@@ -168,7 +174,7 @@ Options:
 
 ###Event:'connect'
 `function (response,socket,head){}`
-每次服务端回复一个请求的时候都会发送一个`CONNECT`事件。如果这个事件没有被侦听,客户接收`CONNECT`事件时,他们的连接就已经关闭了。
+每次服务端回复一个method为`CONNECT`请求的时候都会触发该事件。如果这个事件没有被侦听,接收`CONNECT`method的客户端将关闭他们的连接。
 
 以下例子告诉你如何侦听`connenct`事件。
 
@@ -242,7 +248,7 @@ proxy.listen(1337, '127.0.0.1', () => {
 
 ###Event:'upgrade'
 `function (response,socket,head){}`
-服务端有更新回复request的时候触发。如果该事件未被侦听,客户端收到更新事件头信息的时候连接就关闭了。
+每当服务端回复一个带upgrade的请求的时候触发。如果该事件未被侦听,客户端收到upgrade头信息的时候关闭连接。
 
 下面代码展示如何侦听`upgrade`事件
 
@@ -538,59 +544,71 @@ response.removeHeader('Content-Encoding');
 ```
 
 ###response.sendDate
+当值为true,如果不准备在header中呈现,
+该Date头将自动生成,并在response中发送。
+默认为true。
+
+这应该仅在测试中被禁用;HTTP需要response中的Date头。
+
+
+###response.setHeader(name,value)
+
+为隐式头设置一个单独的头。
+如果这个头已经存在于要发送的头中,它的值将被替换。
+如果你希望使用同样的名称发送多个头,你可以在这里使用一个string数组。
+
+例如:
+
+```
+response.setHeader('Content-Type','text/html');
+
+````
+或者
+```
+response.setHeader('Set-Cookie',['type=ninja','language=javascript']);
+
+````
+
+设置name和value遇到无效字符时将导致抛出TypeError。
+
+当header通过response.setHeader()设置之后,
+它将跟其他header头合并之后传递到response.writeHead(),
+合并之后的header优先传递给response.writeHead()。
+
+```
+// returns content-type = text/plain
+const server = http.createServer((req,res) => {
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('X-Foo', 'bar');
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('ok');
+});
+
+````
 
 
 
 
+##类:http.IncomingMessage
+一个`IncomingMessage`对象通过`http.Server`或`http.ClientRequest`创建,并且作为第一个参数传递给`request`和`response`事件处理。
+它被用来访问response状态,header和data。
 
+它实现[Readable Stream](https://nodejs.org/dist/latest-v6.x/docs/api/stream.html#stream_class_stream_readable)接口,
+以及添加了以下的事件,方法和属性。
 
+###Event:'aborted'
+`function(){}`
+当请求被客户端忽略并且网络socket关闭的时候触发。
 
+###Event:'close'
+`function(){}`
 
+表示底层连接被关闭,像`end`一样,这个事件每次回复仅发生一次。
 
+###message.destroy(\[error])
+- error \<Error>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+当socket收到`IncomingMessage`时调用`destory()`。如果提供了`error`,一个`error`事件被触发并且`error`被作为一个参数传递到该事件的任何侦听器。
 
 
 
