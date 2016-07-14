@@ -9,6 +9,7 @@
 - [Modules](docs/Modules.md)
 - [OS](docs/OS.md)
 - [Process](docs/Process.md)
+- [Query String](docs/QueryString.md)
 - [ReadLine](docs/Readline.md)
 - [Timers](docs/Timers.md)
 

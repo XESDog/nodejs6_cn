@@ -2,7 +2,7 @@
 
 ## Buffer.from(), Buffer.alloc(), and Buffer.allocUnsafe()
 
-nodejs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
+NodeJs6以前，Buffer实例是通过Buffer构造函数创建，传入的参数不同，Buffer分配的值也不一样：
 
 - 第一个参数传递number(e.g. `new Buffer(10)`),创建一个参数指定尺寸的Buffer对象。Buffer实例内存没有经过初始化,
 必须手动使用buf.fill(0)或直接写Buffer来完成初始化。虽然这么做是希望能够提升效率,但是经验告诉我们,我们必须明确
