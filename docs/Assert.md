@@ -164,7 +164,233 @@ assert.equal({a: {b: 1}}, {a: {b: 1}});
 
 ##assert.fail(actual,expected,message,operator)
 
+抛出一个`AssertionError`,如果`message`未设置,则错误信息显示为`actual`和`exceped`通过`operator`分割的字符,
+否则,错误信息显示为`message`。
 
+
+***这里有点没搞明白,设置assert.fail(2,1,undefined,'>')返回的依然是AssertionError***
+
+```
+const assert = require('assert');
+
+assert.fail(1, 2, undefined, '>');
+  // AssertionError: 1 > 2
+
+assert.fail(1, 2, 'whoops', '>');
+  // AssertionError: whoops 
+  
+
+````
+
+##assert.ifError(value)
+
+如果`value`是真,则抛出该值。当要测试回调函数中的`error`参数时非常有用。
+
+```
+const assert = require('assert');
+
+assert.ifError(0); // OK
+assert.ifError(1); // Throws 1
+assert.ifError('error'); // Throws 'error'
+assert.ifError(new Error()); // Throws Error 
+
+````
+
+##assert.notDeepEqual(actual,expected\[,message])
+
+深度测试不相等的情况,和`assert.deepEqual()`相反。
+
+```
+const assert = require('assert');
+
+const obj1 = {
+  a : {
+    b : 1
+  }
+};
+const obj2 = {
+  a : {
+    b : 2
+  }
+};
+const obj3 = {
+  a : {
+    b : 1
+  }
+}
+const obj4 = Object.create(obj1);
+
+assert.notDeepEqual(obj1, obj1);
+  // AssertionError: { a: { b: 1 } } notDeepEqual { a: { b: 1 } }
+
+assert.notDeepEqual(obj1, obj2);
+  // OK, obj1 and obj2 are not deeply equal
+
+assert.notDeepEqual(obj1, obj3);
+  // AssertionError: { a: { b: 1 } } notDeepEqual { a: { b: 1 } }
+
+assert.notDeepEqual(obj1, obj4);
+  // OK, obj1 and obj2 are not deeply equal 
+
+````
+
+如果值深度比较之后相等,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+##assert.noDeepStrictEqual(actual,expected\[,message])
+
+深度严格测试其不相等的情况,和`assert.deepStrictEqual()`相反。
+```
+const assert = require('assert');
+
+assert.notDeepEqual({a:1}, {a:'1'});
+  // AssertionError: { a: 1 } notDeepEqual { a: '1' }
+
+assert.notDeepStrictEqual({a:1}, {a:'1'});
+  // OK 
+
+````
+
+如果值深度严格不相等,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+##assert.noEqual(actual,expected\[,message])
+
+简单的测试,使用不等符!==来检查结果
+
+```
+const assert = require('assert');
+
+assert.notEqual(1, 2);
+  // OK
+
+assert.notEqual(1, 1);
+  // AssertionError: 1 != 1
+
+assert.notEqual(1, '1');
+  // AssertionError: 1 != '1' 
+
+````
+
+如果值相等,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+##assert.notStrictEqual(actual,expected\[,message])
+
+通过!==符号测试严格不等。
+
+```
+const assert = require('assert');
+
+assert.notStrictEqual(1, 2);
+  // OK
+
+assert.notStrictEqual(1, 1);
+  // AssertionError: 1 != 1
+
+assert.notStrictEqual(1, '1');
+  // OK 
+
+````
+如果值是严格不等,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+##assert.ok(value\[,message])
+
+测试是否value为真,等价于`assert.equal(!!value,true,message)`。
+
+如果值不为真,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+```
+const assert = require('assert');
+
+assert.ok(true);  // OK
+assert.ok(1);     // OK
+assert.ok(false);
+  // throws "AssertionError: false == true"
+assert.ok(0);
+  // throws "AssertionError: 0 == true"
+assert.ok(false, 'it\'s false');
+  // throws "AssertionError: it's false"
+   
+
+````
+
+##assert.strictEqual(actual,expected\[,message])
+
+使用`===`测试严格相等
+```
+const assert = require('assert');
+
+assert.strictEqual(1, 2);
+  // AssertionError: 1 === 2
+
+assert.strictEqual(1, 1);
+  // OK
+
+assert.strictEqual(1, '1');
+  // AssertionError: 1 === '1' 
+
+````
+
+如果值不是严格相等,`AssertionError`将传入的参数`message`一起抛出。如果`messaeg`未定义,将输出默认的错误信息。
+
+##assert.throws(block\[,error]\[,message])
+
+期望block抛出错误。
+
+如果指定error,error可以是一个构造函数,RegExp,或者验证方法。
+
+如果指定message,block抛出失败的时候讲输出一个携带message的`AssertionError`对象。
+
+
+使用构造函数验证:
+
+```
+assert.throws(
+  () => {
+    throw new Error('Wrong value');
+  },
+  Error
+);
+ 
+
+````
+
+使用正则验证错误信息
+
+```
+assert.throws(
+  () => {
+    throw new Error('Wrong value');
+  },
+  /value/
+); 
+
+````
+
+自定义错误验证:
+
+```
+assert.throws(
+  () => {
+    throw new Error('Wrong value');
+  },
+  function(err) {
+    if ( (err instanceof Error) && /value/.test(err) ) {
+      return true;
+    }
+  },
+  'unexpected error'
+); 
+
+````
+
+注意,error不能是一个string。如果第二个参数提供的是一个string,error会被忽略并且string将被message代替,这会导致简单的错误:
+```
+    // THIS IS A MISTAKE! DO NOT DO THIS!
+    assert.throws(myFunction, 'missing foo', 'did not throw with expected message');
+    
+    // Do this instead.
+    assert.throws(myFunction, /missing foo/, 'did not throw with expected message'); 
+
+````
 
 
 
