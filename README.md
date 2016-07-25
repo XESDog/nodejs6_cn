@@ -1,5 +1,6 @@
 #nodejs6.3.0中文文档,希望能够坚持
 
+- [Assert](docs/Assert.md)
 - [Buffer](docs/Buffer.md)
 - [Child Processes](docs/ChildProcesses.md)
 - [Cluster](docs/Cluster.md)
