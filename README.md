@@ -7,6 +7,7 @@
 - [Console](docs/Console.md)
 - [Debugger](docs/Debugger.md)
 - [HTTP](docs/Http.md)
+- [HTTPS](docs/Https.md)
 - [Modules](docs/Modules.md)
 - [OS](docs/OS.md)
 - [Process](docs/Process.md)
